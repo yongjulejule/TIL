@@ -1,5 +1,8 @@
 # TIL
+
 Today I Learned
+
+새로 알게 된 내용들을 저장하는 곳입니다.
 
 # Index
 
