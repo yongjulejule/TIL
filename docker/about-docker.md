@@ -14,6 +14,14 @@
 
 [도커 입문 2](https://code-masterjung.tistory.com/130)
 
+## 컨테이너
+
+격리..공간... 리눅스 자체 기능 활용... cgroup... namespace...
+
+## 컨테이너(docker) vs VM
+
+커널 공유... 보안...
+
 ## hello-world
 
 ![docker hello world](/image/docker-hello-world.png)
