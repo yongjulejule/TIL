@@ -1,6 +1,6 @@
 # about-docker
 
-도커란? 
+도커란? 프로세스 별로 독립된 환경을 제공해주는 아이.
 
 [도커란? docker 홈페이지 docs](https://docs.docker.com/get-started/overview/)
 
