@@ -25,6 +25,7 @@ COPY index.html /usr/share/nginx/html/index.html
 ```
 
 `docker build -t [이미지 이름] [실행할 디렉토리(host machine)]` 커멘드로 Dockerfile 스크립트를 실행하면 이미지가 생성됨.
+`docker build -f /path/to/Dockerfile .`로 `Dockerfile`의 경로를 줄 수 있음.
 
 - `FROM` : 기반이 되는 이미지 지정
 - `COPY` : 이미지에 파일이나 디렉토리 추가
