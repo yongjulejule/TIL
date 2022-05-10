@@ -9,38 +9,38 @@ version: "3"
 
 services:
   wordpress-db:
-	  image: mariadb:latest
-		network:
-		  - wordpress-network
-		volumes:
-		  - wordpress-db-volume:/var/lib/mysql
-		restart: always
-		environment:
-			MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
-			MYSQL_DATABASE: ${MYSQL_DATABASE}
-			MYSQL_USER: ${MYSQL_USER}
-			MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-	wordpress:
-		depends-on:
-		  - wordpress-db
-	  image: wordpress:latest
-		network:
-		  - wordpress-network
-		volumes:
-		  - wordpress-volume:/var/www/html
-		ports:
-		  - "8042:80"
-		restart: always
-		environment:
-			WORDPRESS_DB_HOST: wordpress-db
-			WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
-			WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
-			WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
+    image: mariadb:latest
+    network:
+      - wordpress-network
+    volumes:
+      - wordpress-db-volume:/var/lib/mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+  wordpress:
+    depends-on:
+      - wordpress-db
+    image: wordpress:latest
+    network:
+      - wordpress-network
+    volumes:
+      - wordpress-volume:/var/www/html
+    ports:
+      - "8042:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: wordpress-db
+      WORDPRESS_DB_NAME: ${MYSQL_DATABASE}
+      WORDPRESS_DB_USER: ${WORDPRESS_DB_USER}
+      WORDPRESS_DB_PASSWORD: ${WORDPRESS_DB_PASSWORD}
 networks:
-	wordpress-network:
+  wordpress-network:
 volumes:
-	wordpress-volume:
-	wordpress-db-volume:
+  wordpress-volume:
+  wordpress-db-volume:
 ```
 
 입력 후 `docker-compose up -d`를 실행하면 각 컨테이너와 네트워크, 볼륨이 생성됨. (-d = detached)
