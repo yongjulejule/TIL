@@ -12,6 +12,10 @@
 
 도커 엔진이 관리하는 영역 내에 만들어진 볼륨을 컨테이너에 디스크 형태로 마운트 하는것. 도커가 생성 및 관리를 하며 `docker volume create` 명령어로 생성.
 
+>*주의!*
+>
+>*맥같은 경우 docker desktop을 사용하는데, vm으로 실행되기 때문에 volume mount시 /var/lib/docker/<volume-name> 디렉토리가 없음! 컨테이너를 생성하여 -v로 마운트하여 사용해야함...*
+
 ### 컨테이너에 마운트
 
 `docker run ... -v [볼륨명]:[컨테이너 마운트 path]`

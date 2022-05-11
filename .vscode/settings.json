@@ -1,7 +1,10 @@
 {
 	"cSpell.words": [
+		"ONBUILD",
 		"POSIX",
+		"STOPSIGNAL",
 		"tmpfs",
+		"WORKDIR",
 		"yongjule"
 	]
 }
