@@ -1,5 +1,9 @@
 {
 	"cSpell.words": [
+		"Buildkit",
+		"dockerignore",
+		"execvp",
+		"hashbang",
 		"ONBUILD",
 		"POSIX",
 		"STOPSIGNAL",

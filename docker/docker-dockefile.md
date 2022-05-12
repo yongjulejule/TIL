@@ -80,6 +80,8 @@ RUN ["executable", "arg1", "arg2", ...] # exec form exec 로 실행됨
 
 ## ARG instruction
 
+
+
 ## CMD instruction
 
 `CMD`는 세가지 형태가 있음
@@ -98,6 +100,17 @@ CMD command param1 param2 # shell form
 
 ## ENTRYPOINT instruction
 
+`ENTRYPOINT`는 두가지 형태가 있음
+
+```DOCKERFILE
+ENTRYPOINT ["executable","param1","param2"] # exec form, this is the preferred form
+ENTRYPOINT command param1 param2 # shell form
+```
+
+`ENTRYPOINT`는 컨테이너가 `executable`로 실행되도록 설정을 해주고 `CMD` instruction은 덮어씀. `docker run <image> -d` 같은 형태로 `ENTRYPOINT`에 인자를 넘길 수 있으며 `docker run --entrypoint`로 `ENTRYPOINT` instruction을 덮어쓸 수 있음.
+
+PID-1, SIGTERM, dump-init 공부 필요...
+
 ## LABEL instruction
 
 ```DOCKERFILE
@@ -106,5 +119,68 @@ LABEL key=value # key=value 형태로 사용
 
 key=value 형태로 이미지에 라벨을 줄 수 있으며, `docker image inspect`를 통하여 확인할 수 있음
 
+## EXPOSE instruction
 
-[Dockerfile Ref](https://docs.docker.com/engine/reference/builder/)
+```DOCKERFILE
+EXPOSE <port> [<port>/<protocol>...] # port를 expose함
+```
+
+`EXPOSE` instruction은 컨테이너가 런타임에서 특정 포트를 listen하도록 **정보를 제공**하며, `TCP`/`UDP`를 선택할 수 있음. (기본값은 `TCP`)
+실제로 port를 publish하는것은 아니며 컨테이너를 실행하는 유저에게 정보를 제공하는 역할을 함. 컨테이너에서 publish를 하려면 `run`시 `-P`옵션을 통하여 publish 해야함.
+
+`EXPOSE 8080:80/tcp`와 같이 호스트의 포트는 여기서 줄 수 없고, 컨테이너가 실행될때 커멘드로 설정해줘야 함... 당연함.
+
+## ENV instruction
+
+```DOCKERFILE
+ENV <key>=<value> ... # 한번에 여러개 설정 가능
+```
+
+`<key>=<value>`형태로 환경변수를 설정함. 이는 Dockerfile 내부에서도 쓰이고, 컨테이너에도 적용됨. 만약 Dockerfile 내부에서만 쓰고싶은 변수를 설정하고 싶다면 `ARG`를 사용하거나, 한 instruction에서만 사용하려면 `RUN TMP=VALUE apt-get update && ...`형태로 사용함.	
+
+## ADD instruction
+
+`ADD`는 두가지 형태가 있음
+
+```DOCKERFILE
+ADD [--chown=<user>:<group>] <src>... <dest>
+ADD [--chown=<user>:<group>] ["<src>", ... "<dest>"] # path에 whitespace가 있으면 이 방식을 사용해야함
+```
+
+> Note
+> --chown은 linux 환경에서만 작동함!
+
+`ADD`는 `src`의 새로운 파일이나, 디렉토리 혹은 file URL을 복사해서 이미지의 `dest` path에 추가함.
+
+파일이나 디렉토리를 추가하는 경우, build context의 상대경로로 적용되며 각 `src`는 wildcard를 사용할 수 있고 [Go의 filepath.Match](https://pkg.go.dev/path/filepath#Match) 룰을 따름
+
+```DOCKERFILE
+ADD hom* /mydir/ # hom 으로 시작하는 파일들
+ADD hom?.txt /mydir/ # ? = any single character
+ADD test.txt relative/path # 상대경로 지정
+ADD test.txt /absolute/path/ # 절대경로 지정
+```
+
+`--chown` 플레그가 없으면 UID와 GID는 0(root)로 설정됨. `--chown` 플레그를 준다면 리눅스의 `chown` 커멘드와 동일한 방식으로 설정하면 됨.
+만약 `/etc/passwd`나 `/etc/group`에 존재하지 않는 user name이나 group name을 준다면, 해당 `ADD` instruction은 실패함! 하지만 UID나 GID를 숫자로 준다면 해당 id를 생성해서 만들어줌. 따라서 id로 주는것 추천
+
+`URL`로 `ADD`를 할 때, authentication이 필요하다면 `RUN wget`나 `RUN curl`같은 다른 툴을 사용해야함.
+
+`ADD`에 적용되는 다양한 rule은 [Dockerfile reference](https://docs.docker.com/engine/reference/builder/#add) 참조.
+
+## COPY instruction
+
+```DOCKERFILE
+COPY [--chown=<user>:<group>] <src>... <dest>
+COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
+```
+
+`COPY`는 `RUN`과 유사하지만, URL을 사용할 수 없으며 로컬 tar 파일을 자동으로 압축해제해주지 않음.
+
+`COPY`가 더 직관적이기 때문에, 꼭 필요하지 않으면 `COPY`를 사용하는게 좋음 ([COPY vs ADD](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy))
+
+
+
+# Reference
+
+[Docker 공식 document - dockerfile](https://docs.docker.com/engine/reference/builder/)
