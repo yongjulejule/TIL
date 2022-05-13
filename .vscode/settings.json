@@ -6,6 +6,8 @@
 		"hashbang",
 		"ONBUILD",
 		"POSIX",
+		"SIGKILL",
+		"SIGTERM",
 		"STOPSIGNAL",
 		"tmpfs",
 		"WORKDIR",
