@@ -84,6 +84,8 @@ RUN ["executable", "arg1", "arg2", ...] # exec form exec 로 실행됨
 
 ## CMD instruction
 
+> [signal-and-docker 문서와 함께 보기](/docker/signal-and-docker.md)
+
 `CMD`는 세가지 형태가 있음
 
 ```DOCKERFILE
@@ -100,6 +102,8 @@ CMD command param1 param2 # shell form
 
 ## ENTRYPOINT instruction
 
+> [signal-and-docker 문서와 함께 보기](/docker/signal-and-docker.md)
+
 `ENTRYPOINT`는 두가지 형태가 있음
 
 ```DOCKERFILE
@@ -109,7 +113,6 @@ ENTRYPOINT command param1 param2 # shell form
 
 `ENTRYPOINT`는 컨테이너가 `executable`로 실행되도록 설정을 해주고 `CMD` instruction은 덮어씀. `docker run <image> -d` 같은 형태로 `ENTRYPOINT`에 인자를 넘길 수 있으며 `docker run --entrypoint`로 `ENTRYPOINT` instruction을 덮어쓸 수 있음.
 
-PID-1, SIGTERM, dump-init 공부 필요...
 
 ## LABEL instruction
 

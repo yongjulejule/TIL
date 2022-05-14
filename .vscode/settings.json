@@ -1,5 +1,6 @@
 {
 	"cSpell.words": [
+		"baseimage",
 		"Buildkit",
 		"dockerignore",
 		"execvp",
@@ -9,6 +10,8 @@
 		"SIGKILL",
 		"SIGTERM",
 		"STOPSIGNAL",
+		"subshell",
+		"tini",
 		"tmpfs",
 		"WORKDIR",
 		"yongjule"
