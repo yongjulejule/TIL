@@ -113,6 +113,22 @@ ENTRYPOINT command param1 param2 # shell form
 
 `ENTRYPOINT`는 컨테이너가 `executable`로 실행되도록 설정을 해주고 `CMD` instruction은 덮어씀. `docker run <image> -d` 같은 형태로 `ENTRYPOINT`에 인자를 넘길 수 있으며 `docker run --entrypoint`로 `ENTRYPOINT` instruction을 덮어쓸 수 있음.
 
+`ENTRYPOINT`가 여러개 있으면 가장 마지막에 있는 것이 적용됨.
+
+[docker docs 에 다양한 예시가 있음](https://docs.docker.com/engine/reference/builder/#entrypoint)
+
+### CMD와 ENTRYPOINT의 상호작용
+
+`CMD`와 `ENTRYPOINT`의 작용에 대한 몇가지 룰이 있음.
+
+1. `Dockerfile`은 적어도 하나의 `ENTRYPOINT`나 `CMD`를 가지고 있어야 함.
+2. `ENTRYPOINT`는 사용하는 컨테이너가 `executable`일때 정의해줘야함.
+3. `CMD`는 `ENTRYPOINT`의 default arguments를 정의하는 용도로 사용하거나 컨테이너의 커맨드를 실행하는 용도로 사용해아함.
+4. `CMD`는 컨테이너를 `run`할때 주는 인자에 의해 덮어씌워짐.
+
+> 만약 `CMD`가 base image에서 정의되어 있고, `ENTRYPOINT`를 설정한다면 `CMD`는 reset되기 때문에 현재 이미지에 대하여 다시 정의해줘야함.
+
+![docker-entrypoint-and-cmd](/image/docker-entrypoint-and-cmd.png)
 
 ## LABEL instruction
 
@@ -182,6 +198,83 @@ COPY [--chown=<user>:<group>] ["<src>",... "<dest>"]
 
 `COPY`가 더 직관적이기 때문에, 꼭 필요하지 않으면 `COPY`를 사용하는게 좋음 ([COPY vs ADD](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/#add-or-copy))
 
+## VOLUME instruction
+
+```DOCKERFILE
+VOLUME ["/data"]
+```
+
+> [docker-mount](/docker/docker-mount.md)에서 `volume-mount` 방식임.
+
+`VOLUME` instruction은 해당 이름으로 `mount point`를 생성하고 호스트나 다른 컨테이너와 별개의 volume을 holding한다고 mark함. 값들은 `VOLUME ["/var/log/"]`와 같이 JSON array 형식으로 나타낼 수 있고, `VOLUME /var/log /var/db` 같이 plain string 형태로 여러개를 지정할 수도 있음.
+
+`docker run` 커맨드로 base image의 특정 위치에 존재하는 어떤 데이터로도 새로 생성된 volume를 초기화할 수 있음.
+
+```DOCKERFILE
+FROM alpine:3.13
+RUN mkdir /myvol
+RUN echo "hello volume!" > /myvol/hihi
+VOLUME /myvol
+```
+
+![docker-volume-example](/image/docker-volume-example.png)
+
+해당 `Dockerfile`로 만들어진 이미지로 `run`을 하면 `/myvol`에 새로운 마운트 포인트를 만들고, `hihi` 파일을 생성된 볼륨에 저장함. 
+
+### VOLUME instruction을 사용할때 주의할점
+
+- Volumes on Windows-based containers: 윈도우 기반의 컨테이너를 사용할때, volume의 위치는 다음 중 하나와 같음
+  - 존재하지 않거나 빈 디렉토리
+  - `c:`드라이브가 아닌 다른 드라이브에 저장됨
+- Changing the volume from within the Dockerfile: volume이 선언된 이후 데이터를 변경하는 step가 있으면, discard됨.
+- JSON formatting: 선언된 리스트는 JSON array 형식이라서, `"`을 사용해야함
+- The host directory is declared at container run-time: 호스트 디렉토리는 호스트에 의존함. 이는 이미지의 호환성을 위한거임. 따라서 `Dockerfile`내부에서 호스트 디렉토리를 마운트 할 수 없음. 
+
+# USER instruction
+
+```DOCKERFILE
+USER <user>[:<group>]
+USER <UID>[:<GID>]
+```
+
+`USER` instruction은 이미지를 실행할때, 그리고 `Dockerfile`의 `RUN`, `CMD` and `ENTRYPOINT` instruction을 실행할때 `user name`과 `group name`(optional)을 지정할 수 있음.
+
+> user에게 그룹을 지정할때는, 선언된 그룹에만 속하게 되고 다른 그룹은 무시됨
+
+> user에게 `primary group`가 없으면 root 로 지정됨. 
+
+# WORKDIR instruction
+
+```DOCKERFILE	
+WORKDIR /path/to/workdir
+```
+
+`WORKDIR` instruction은 `Dockerfile` 의 `RUN`, `CMD`, `ENTRYPOINT`, `COPY`, `ADD` instruction을 실행할때 working directory를 지정함. 만약 `WORKDIR`이 존재하지 않으면 디렉토리를 생성함.
+
+`WORKDIR`은 `Dockerfile`에서 여러번 사용될 수 있고, 상대경로로도 지정할 수 있음.
+
+예시:
+
+```DOCKERFILE
+WORKDIR /a
+WORKDIR b 
+WORKDIR c
+RUN pwd
+```
+
+이 Dockerfile을 실행하면 pwd는 /a/b/c에 있음.
+
+`WORKDIR`에서 환경변수를 사용하면, 이는 `Dockerfile`의 `ENV`에 설정된 환경변수만 사용할 수 있음.
+
+만약 `WORKDIR`이 지정되지 않으면 기본값으로 `/`가 되며, 의도치 않은 디렉토리에서 작업하는것을 방지하기 위해 `WORKDIR`을 명시적으로 작성하는게 좋음.
+
+# ONBUILD
+
+```DOCKERFILE
+ONBUILD <INSTRUCTION>
+```
+
+`ONBUILD` instruction은 이미지가 또다른 build의 base로 쓰일 때 실행할 _trigger_ instruction을 지정해줌. 이 trigger는 
 
 
 # Reference
