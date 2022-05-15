@@ -35,3 +35,5 @@ SGID의 S 역시 set이라는 의미이며, 해당 파일을 실행할 때 파�
 ## 예시
 
 ![special-file-permission](/image/special-file-permission.png)
+
+이때 첫번째 사례에서 `S`, `T`와 같이 대문자로 표기되는 부분은, 실행 권한이 없는데 SUID, SGUID, sticky bit가 설정된 상황을 나타내며 파일을 실행시킬 순 없음.
