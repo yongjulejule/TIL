@@ -80,7 +80,109 @@ RUN ["executable", "arg1", "arg2", ...] # exec form exec 로 실행됨
 
 ## ARG instruction
 
+```DOCKERFILE
+ARG <name> [=<default value>]
+```
 
+`ARG` instruction은 build-time에 전달할 수 있는 변수를 정의함. 이 변수는 `docker build --build-arg <varname>=<value>`를 통하여 정의할 수 있음. 만약 `Dockerfile`에서 정의하지 않은 변수를 사용하면 warning이 발생함.
+
+`Dockerfile`은 하나 이상의 `ARG` instruction을 줄 수 있음.
+
+> __WARNING__
+> github key나 user credential같은 정보를 전달하는것은 보안상 좋지 않음. `docker history` 커맨드를 이용하면 내용이 다 노출되기 때문. build time에 비밀 정보를 전달하고 싶으면 [링크](https://docs.docker.com/develop/develop-images/build_enhancements/#new-docker-build-secret-information) 참조
+
+### Default values
+
+`ARG` instruction은 default value를 설정할 수 있음.
+
+```DOCKERFILE
+FROM busybox
+ARG user1=link
+ARG buildNo=1
+# ...
+```
+
+`ARG` instruction이 default value를 갖고 있고 build-time에 값을 전달하지 않으면 기본값을 사용함.
+
+### Scope
+
+`ARG` 변수 정의는 command-line이나 다른 곳에서 부터가 아니라, `Dockerfile`에서 정의된 부분부터 유효함.
+
+예시:
+
+```DOCKERFILE
+FROM alpine:3.13
+USER ${user:-link} # 없으면 link로 치환
+ARG user
+USER $user
+```
+
+위와 같이 `Dockerfile`을 설정하고, `docker build --build-arg user=yongjule .`을 사용해보자.
+
+2번째 라인의 `USER`는 link로 설정되고, 4번째 라인의 `USER`는 command-line에서 전달된 yongjule로 설정됨. `ARG` instruction을 정의하기 전에는 empty string인것임!
+
+`ARG` instruction은 정의되었던 build stage를 벗어나면 사라짐. 여러번 사용하려면 build stage마다 정의해야함.
+
+예시:
+
+```DOCKERFILE
+FROM alpine:3.13
+ARG SETTING
+RUN ./run/setup $SETTING
+
+FROM ubuntu:latest
+ARG SETTING
+RUN ./run/other $SETTING
+```
+
+### Using ARG variables
+
+`RUN` instruction의 변수를 지정하기 위해 `ARG`나 `ENV`를 사용할 수 있음. 이때 `ENV`로 정의된 환경변수와 `ARG` instruction의 변수명이 같으면 환경변수가 `ARG`의 변수를 덮어씀.
+
+`ARG`와 `ENV`를 다음과 같은 방법으로 잘 활용할 수 있음
+
+```DOCKERFILE
+FROM alpine:3.13
+ARG CONT_IMG_VER
+ENV CONT_IMG_VER=${CONT_IMG_VER:-v1.0.0}
+RUN echo $CONT_IMG_VER
+```
+
+`ARG`와 다르게, `ENV`는 build image에 항상 존재하므로, `--build-arg` 옵션이 필요 없음. 따라서 위와 같은 `Dockerfile`로 컨테이너를 실행하면 `--build-arg` 옵션을 주지 않아도 `v1.0.0`이 적용됨.
+
+### Impact on build caching
+
+`ARG`의 변수들은 `ENV` 변수와 다르게 build image에 남지 않음. 하지만 build cache에 `ENV`와 비슷한 방식으로 영향을 미침. `Dockerfile`에서 `ARG` 변수가 이전과 다르게 정의되어 있으면, 해당 `ARG`에서 "cache miss"가 일어나는게 아니라, `ARG`에서 정의된 변수가 처음으로 사용될때 "cache miss"가 발생함. (`cache miss` : 캐시를 찾지 못하는것) 특히, `ARG` 이후의 `RUN` instruction은 암시적으로 `ARG`를 사용하는 것으로 인식되기 때문에 "cache miss"가 발생함. 이때 "predefined-args"들은 `ARG`에서 별도로 선언하지 않으면 이런 현상이 발생하지 않음.
+
+[기본적으로 정의되어 있는 ARG들(predefined-args)은 문서 참조. docker history에 남지않음!](https://docs.docker.com/engine/reference/builder/#predefined-args)
+
+예시:
+
+``` DOCKERFILE
+FROM ubuntu
+ARG CONT_IMG_VER
+RUN echo hello
+```
+
+위와 같은 `Dockerfile`에서 `--build-arg CONT_IMG_VER=value`로 커맨드 라인에서 옵션을 주면 2번째 라인이 아닌 3번째 라인에서 cache miss가 발생함.
+
+```DOCKERFILE
+FROM ubuntu
+ARG CONT_IMG_VER
+ENV CONT_IMG_VER=$CONT_IMG_VER
+RUN echo hello
+```
+
+위와 같은 상황에서는 3번째 라인의 `ENV`에서 cache miss가 발생함. 
+
+```DOCKERFILE
+FROM ubuntu
+ARG CONT_IMG_VER
+ENV CONT_IMG_VER=hello
+RUN echo $CONT_IMG_VER
+```
+
+위와 같은 상황에서는 CONT_IMG_VER이 constant하므로 cache miss가 발생하지 않고 모든 instruction이 진행됨
 
 ## CMD instruction
 
@@ -237,11 +339,13 @@ USER <user>[:<group>]
 USER <UID>[:<GID>]
 ```
 
-`USER` instruction은 이미지를 실행할때, 그리고 `Dockerfile`의 `RUN`, `CMD` and `ENTRYPOINT` instruction을 실행할때 `user name`과 `group name`(optional)을 지정할 수 있음.
+`USER` instruction은 이미지를 실행할때, 그리고 `Dockerfile`의 `RUN`, `CMD` and `ENTRYPOINT` instruction을 실행할때 `user name`과 `group name`(optional)을 지정할 수 있음. 최종적으로 적용된 `USER`는 이미지를 통하여 컨테이너에 접속했을때 유저가 됨.
 
 > user에게 그룹을 지정할때는, 선언된 그룹에만 속하게 되고 다른 그룹은 무시됨
 
 > user에게 `primary group`가 없으면 root 로 지정됨. 
+
+> __주의__ 유저를 생성해주지 않음...! 그냥 있다고 가정하고 해당 유저로 instruction을 실행하기 때문에 유저를 만들어줄 필요가 있음. 또한, 내부 커멘드를 활용하기 위한 접근 권한을 잘 체크해야함!
 
 # WORKDIR instruction
 
@@ -268,14 +372,31 @@ RUN pwd
 
 만약 `WORKDIR`이 지정되지 않으면 기본값으로 `/`가 되며, 의도치 않은 디렉토리에서 작업하는것을 방지하기 위해 `WORKDIR`을 명시적으로 작성하는게 좋음.
 
-# ONBUILD
+# ONBUILD instruction
 
 ```DOCKERFILE
 ONBUILD <INSTRUCTION>
 ```
 
-`ONBUILD` instruction은 이미지가 또다른 build의 base로 쓰일 때 실행할 _trigger_ instruction을 지정해줌. 이 trigger는 
+`ONBUILD` instruction은 이미지가 또다른 build의 base로 쓰일 때 실행할 _trigger_ instruction을 지정해줌. 이 trigger는 후속의 build stream에서 `FROM` instruction 직후에 삽입됨. 
 
+어떤 build instruction도 trigger에 등록할 수 있음.
+
+이는 이미지를 build할때 기반이 되는 이미지의 building 과정에서 유용함. 예를 들면, 어플리케이션의 빌드 환경이나 유저가 정의한 configure를 daemom으로 구성하는 상황이 있음.
+
+좀 더 상세한 내용은 [문서](https://docs.docker.com/engine/reference/builder/#onbuild) 참고
+
+# STOPSIGNAL instruction
+
+```DOCKERFILE
+STOPSIGNAL <SIGNAL>
+```
+
+`STOPSIGNAL`은 컨테이너가 종료될때 보낼 signal을 설정해줌. `SIGKILL`같은 signal name으로 지정할 수 있고 signal number으로도 지정할 수 있음. 기본적으론 `SIGTERM`이 보내짐.
+
+---
+
+`HEALTHCHECK`나 windows 환경에서 자주 쓰는 `SHELL`은 공식문서 참조
 
 # Reference
 
