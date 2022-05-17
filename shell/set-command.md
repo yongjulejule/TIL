@@ -24,4 +24,12 @@ exit_status가 0이 아니면 거기서 종료함.
 
 초기화 해주는 느낌... `@` 나 `*`같은 special parameter를 제외하고 variable를 모두 삭제하고, error message는 stderr로 출력되게 만들며, interactive하지 않은 shell들은 모두 종료됨.
 
+## set -o pipefail
+
+쉘에서 `ls | non-exist | ls`와 같이 pipe로 명령어가 구성되면 가장 마지막 명령어의 종료 상태에 따라 exit status가 저장되는데, `pipefail`이 설정되어 있으면 중간에 실패해도 exit status가 저장됨.
+
+![pipefail-example](/image/shell-set-pipefail.png)
+
+맥 `zsh`, `bash` 기준으로 가장 마지막에 실패한 명령어의 exit status가 저장됨.(사진은 zsh에서 실행한 것)
+
 [GNU 문서 참조](https://www.gnu.org/software/bash/manual/html_node/The-Set-Builtin.html)

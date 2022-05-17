@@ -12,6 +12,7 @@
 		"mydir",
 		"myvol",
 		"ONBUILD",
+		"pipefail",
 		"POSIX",
 		"rwsr",
 		"rwxrw",
