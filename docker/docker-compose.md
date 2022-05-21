@@ -50,3 +50,5 @@ volumes:
 `Makefile`처럼 내용이 바뀌면 바뀐 사항에 대해서만 재구성함
 
 `docker-compose down`을 하면 알아서 컨테이너들을 종료시키고 삭제해주며 네트워크 역시 삭제해줌! (볼륨은 남아있음. -v옵션을 주면 삭제함)
+
+[docker-compose cli 명령어](https://docs.docker.com/compose/reference/)
