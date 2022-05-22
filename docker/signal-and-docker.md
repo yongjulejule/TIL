@@ -38,6 +38,19 @@ container의 pid 1로 인하여 docker stop이 예상과 다르게 작동하는 
 - shell 을 사용하려면 shell의 `exec` 명령어로 실행하기.
 - `subshell`으로 실행되는 상황은 항상 주의하기 (pipe)
 
+
+# tini 사용...
+
+tini를 pid 1로 잡고 mariadb 컨테이너를 실행하던 중 시그널에 문제가 있는걸 발견함...
+
+mysqld_safe를 foreground process로 둔 상태에서 sigquit를 보내면 정상적으로 종료되지만 daemon으로 돌린 상태에선 아무런 시그널도 먹지 않음.(sigkill 제외)
+
+`tini -vvv -- ./entrypoint.sh mysqld_safe` 같은 방식으로 실행하면 시그널에 대한 로그가 찍히는데, pid 1인 tini가 받고, 자식에게 전달되는지 불분명함. 
+
+직접 docker exec -it image /bin/sh 로 쉘에 들어가서 시그널을 보냈을때, mysqld_safe가 시그널을 다 먹어버리는걸로 추정됨. (tini에는 시그널 전달 됨. 또한 mysqld_safe의 자식으로 실행되는 mysqld에 시그널을 집적 쏘면 작동함)
+
+tini같은 init 프로그램을 사용할땐, 사용할 프로그램이 시그널 핸들링을 어떻게 하는지 알아야함!
+
 # 참조
 
 [Best practices for propagating signals on Docker](https://www.kaggle.com/code/residentmario/best-practices-for-propagating-signals-on-docker/notebook)
