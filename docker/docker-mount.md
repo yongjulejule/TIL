@@ -99,5 +99,5 @@ volumes:
 
 위와 같이 volume에 다양한 옵션을 줄 수 있음. 호스트 머신의 디렉토리를 docker volume에 마운트 하고, 컨테이너에선 docker volume를 사용하는 구조가 됨!
 
-`driver`는 마운트를 위한 외부 라이브러리를 사용할 수 있으며 `local`을 사용하면 호스트의 파일시스템을 따라가며 default가 local임.(리눅스만 지원)
+`driver`는 마운트를 위한 외부 라이브러리를 사용할 수 있으며 `local`을 사용하면 호스트의 파일시스템을 따라가며 default가 local임.(리눅스, 맥만 지원... 윈도우는 안된다고 함)
 `driver_opts`는 linux의 `mount(8)`을 따르며 보통 위와 같이 사용한다고 함... 

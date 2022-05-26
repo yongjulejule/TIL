@@ -14,6 +14,7 @@
 		"mysqld",
 		"myvol",
 		"ONBUILD",
+		"PCRE",
 		"pipefail",
 		"POSIX",
 		"rwsr",
