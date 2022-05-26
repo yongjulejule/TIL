@@ -4,6 +4,7 @@
 		"Buildkit",
 		"daemom",
 		"dockerignore",
+		"envsubst",
 		"execvp",
 		"hashbang",
 		"HEALTHCHECK",
