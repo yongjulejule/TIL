@@ -8,6 +8,18 @@ read, write, execute은 각각 4, 2, 1의 숫자로 표현되며 763권한이면
 
 특수한 권한(SUID, SGID, sticky bit)이 설정되는 경우가 있음. (일부 시스템에서 passwd나 /tmp 디렉토리)
 
+## Regular file
+
+Regular file의 권한은 의도한대로 read는 파일 읽기, write는 파일 쓰기, execute는 파일 실행을 허용함.
+
+## Directory
+
+Directory의 권한은 Regular file과 살짝 다름.
+
+- `read` : 디렉토리 내 파일 목록 보기 가능
+- `write` : 디렉토리 내 파일 생성, 이름변경, 삭제 가능
+- `execute` : 디렉토리 안에 들어갈 수 있음.
+
 ## SUID
 
 SUID의 S는 set라는 의미를 가지며, 해당 파일을 실행할 때 파일의 소유주 권한이 설정되어서 실행됨.
