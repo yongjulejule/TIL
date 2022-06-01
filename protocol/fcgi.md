@@ -1,2 +1,0 @@
-# fcgi (fest CGI)
-

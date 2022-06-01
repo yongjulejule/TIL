@@ -6,6 +6,8 @@
 		"dockerignore",
 		"envsubst",
 		"execvp",
+		"fastcgi",
+		"fcgi",
 		"hashbang",
 		"HEALTHCHECK",
 		"hihi",
