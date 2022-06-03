@@ -81,7 +81,23 @@ mount namespace는 각 네임스페이스의 프로세스가 볼 수 있는 독�
 
 PID namespace는 pid 숫자의 space를 격리시키며, 따라서 서로 다른 네임스페이스에 있다면 pid가 중복될 수 있음. 새로운 pid namespace의 pid는 1부터 시작하고, 독립된 시스템으로 작동하며 `fork`, `vfork`, `clone`을 통해 프로세스를 생성하여 네임스페이스 내에서 중복되지 않는 pid를 생성할 수 있음.
 
+## User namespace
 
-[linux namespace의 모든것 (영문)](https://windsock.io/using-linux-namespaces-to-isolate-processes/)
+User namespace는 보안에 관련된 identifier와 attribute를 격리시킴. 특히 user id, group id, root directory, keys (man 7 keyrings), capabilities (man 7 capabilities)가 해당됨. 프로세스의 uid와 gid는 네임스페이스 내부와 외부에서 다를 수 있음. 특히 user namespace 내부에서 모든 권한을 갖는 프로세스여도 외부에선 그렇지 않음.
+
+## UTS namespace
+
+UTS namespace는 hostname과 [NIS](/linux/namespace.md#nis-network-information-service) domain name을 격리시킴. 
+
+### NIS (Network Information Service)
+
+네트워크 상의 컴퓨터 간에 유저 및 호스트 이름 같은 시스템 구성 데이터를 배포하기 위한 프로토콜. 중요한 시스템 데이터 파일을 네트워크를 통하여 공유하여 관리자와 사용자들에게 일관성 있는 환경을 제공함.
+
+[NIS 사용 예시](http://www.linuxlab.co.kr/docs/98-03-4.htm)
+
+
+# References
+
+[linux namespace의 모든것 (영문)](https://windsock.io/₩using-linux-namespaces-to-isolate-processes/)
 [linux namespace 블로그](https://www.44bits.io/ko/keyword/linux-namespace)
 [linux namespace wikipedia](https://en.wikipedia.org/wiki/Linux_namespaces)
