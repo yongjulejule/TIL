@@ -39,8 +39,6 @@ COPY index.html /usr/share/nginx/html/index.html
 
 [Dockerfile에서 자주 쓰이는 명령어 (한글 블로그)](https://www.daleseo.com/dockerfile/)
 
-그냥 FROM에 mariadb 쓰면 안됨...? alpine 기반으로 하면... 왜 그냥 스크립트 짜면 안됨? 엔트리포인트? CMD? ARG? 으아아... 문서 읽고 공부해서 내용 채워넣기
-
 ### Dockerfile vs docker-compose
 
 `Dockerfile`은 이미지를 만드는거고 `docker-compose`는 컨테이너와 주변 환경(볼륨이나 네트워크)을 만드는거임. 

@@ -26,6 +26,7 @@
 		"NEWPID",
 		"NEWUSER",
 		"NEWUTS",
+		"nsenter",
 		"ONBUILD",
 		"PCRE",
 		"pipefail",

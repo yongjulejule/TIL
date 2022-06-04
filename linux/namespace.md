@@ -41,6 +41,10 @@ man 7 cgroups
 
 요약하면, 프로세스들의 리소스 사용량을 제한, 모니터링, 격리할 수 있는 linux kernel 기능임.
 
+![linux cgroup fs](/image/linux-cgroup-fs.png)
+
+이와 같이 어떻게 구성되어 있는지 확인할 수 있음!
+
 결국 namespace는 무엇을 볼 수 있는지를 정해주고 cgroup는 무엇을 사용할 수 있는지 정해줌!
 
 [cgroup 한글 블로그](https://sonseungha.tistory.com/535)
@@ -53,13 +57,17 @@ man 7 cgroups
 
 Cgroup 자체로 격리가 가능하지만, process의 cgroup 뷰를 가상화한게 cgroup namespace임. 각 cgroup namespace는 cgroup root directory를 가지게 되며 이 root directory는 `/proc/<pid>/cgroup` 파일에 표시되는 상대 경로의 기준점이 됨... 잘 모르겠다
 
+아마 여기에 해당하는 cgroup에 영향을 미치는듯
+
+![proc cgroup](/image/linux-proc-cgroup.png)
+
 man 7 cgroup_namespaces 참조
 
 ## IPC Namespace
 
 IPC Namespace는 특정 IPC 자원(system V의 IPC object나 POSIX의 Message Queue)을 격리한다. 각 IPC Namespace는 자기만의 IPC object를 갖고 있고, 이 object는 동일한 namespace에 있으면 볼 수 있으며 다른 namespace에선 볼 수 없음.
 
-POSIX의 경우 `/proc/sys/fs/mqueue`에서 확인할 수 있음.
+POSIX Message Queue의 경우 `/proc/sys/fs/mqueue`에서 확인할 수 있음.
 
 IPC namespace가 사라질때, (이 네임스페이스의 마지막 프로세스가 종료되었을때) 해당 IPC object는 자동으로 제거됨.
 
@@ -81,6 +89,28 @@ mount namespace는 각 네임스페이스의 프로세스가 볼 수 있는 독�
 
 PID namespace는 pid 숫자의 space를 격리시키며, 따라서 서로 다른 네임스페이스에 있다면 pid가 중복될 수 있음. 새로운 pid namespace의 pid는 1부터 시작하고, 독립된 시스템으로 작동하며 `fork`, `vfork`, `clone`을 통해 프로세스를 생성하여 네임스페이스 내에서 중복되지 않는 pid를 생성할 수 있음.
 
+이렇게 만들어진 새로운 네임스페이스는 디폴트 네임스페이스에 동시에 속하게 되어, 디폴트 네임스페이스에서는 두개의 pid를 가진 샘이 됨.(default의 pid, new namespace의 pid)
+
+간단한 예시)
+
+`unshare --fork --pid --mount-proc bash` 커맨드로 pid 네임스페이스를 만들자.
+
+![create pid namespace](/image/linux-pid-namespace-create.png)
+
+새로운 pid namespace에서 pid 1번은 디폴트 네임스페이스에서 pid 4702번이 할당됨. (이미지의 NSpid 참조)
+
+![new pid process status](/image/linux-pid-namespace-status.png)
+
+`readlink /proc/<pid>/ns/pid` 커맨드로 pid 네임스페이스의 링크를 조회해보자.
+
+![pid namespace compare](/image/linux-pid-namespace-compare.png)
+
+이렇게 간단히 분리된 Pid 네임스페이스를 만들 수 있음.
+
+nsenter(namespace enter) 커멘드를 통해 네임스페이스에 들어갈 수 있으며 이는 `docker exec`과 유사함
+
+![pid namespace enter](/image/linux-pid-nsenter.png)
+
 ## User namespace
 
 User namespace는 보안에 관련된 identifier와 attribute를 격리시킴. 특히 user id, group id, root directory, keys (man 7 keyrings), capabilities (man 7 capabilities)가 해당됨. 프로세스의 uid와 gid는 네임스페이스 내부와 외부에서 다를 수 있음. 특히 user namespace 내부에서 모든 권한을 갖는 프로세스여도 외부에선 그렇지 않음.
@@ -98,6 +128,8 @@ UTS namespace는 hostname과 [NIS](/linux/namespace.md#nis-network-information-s
 
 # References
 
-[linux namespace의 모든것 (영문)](https://windsock.io/₩using-linux-namespaces-to-isolate-processes/)
+[linux namespace의 모든것 (영문)](https://windsock.io/using-linux-namespaces-to-isolate-processes/)
+
 [linux namespace 블로그](https://www.44bits.io/ko/keyword/linux-namespace)
+
 [linux namespace wikipedia](https://en.wikipedia.org/wiki/Linux_namespaces)

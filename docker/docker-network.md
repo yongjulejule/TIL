@@ -8,7 +8,7 @@
 
 `docker network inspect [도커 프로세스 id]`로 해당 컨테이너가 사용하는 네트워크 정보를 가져올 수 있음.
 
-![docker-run-command.md](/docker/docker-run-command.md)의 내용에 따라 `mariadb`와 `wordpress`의 컨테이너를 생성하고, 해당 컨테이너가 사용하는 네트워크를 inspect 해보면 다음과 같음
+[docker-run-command.md](/docker/docker-run-command.md)의 내용에 따라 `mariadb`와 `wordpress`의 컨테이너를 생성하고, 해당 컨테이너가 사용하는 네트워크를 inspect 해보면 다음과 같음
 
 ```bash
 .
