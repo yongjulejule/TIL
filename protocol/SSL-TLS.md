@@ -2,15 +2,11 @@
 
 SSL은 Secure Socket Layer의 약자로 흔히 HTTPS에 사용된다고 알려져 있지만, SSL은 1996년에 v3.0을 마지막으로 더이상 업데이트 되고 있지 않고, TLS로 바뀌어서 업데이트 중이며 SSL 3.0은 2015년에 추방되었다. 즉 현재 SSL이라고 부르는 것은 관례적으로 남아있을 뿐 TLS임.
 
-## about TLS
+## About TLS
 
-TLS는 Transport Layer Security의 약자로 컴퓨터 네트워크 상에서 사용되는 암호화 프로토콜임. OSL 7 레이어 기준 5 level layer에 속하며 주로 HTTPS를 위해 사용되지만 voice over IP, 파일 전송(FTPS) 등을 위해서도 사용됨.
+TLS는 Transport Layer Security의 약자로 컴퓨터 네트워크 상에서 사용되는 암호화 프로토콜임. OSL 7 layer model, TCP/IP model 중 단일 계층에 속한다고 하긴 어려우며 TCP가 있는 Transport layer와 Application layer 사이라고 생각해야함. 주로 HTTPS를 위해 사용되지만 voice over IP, 파일 전송(FTPS) 등을 위해서도 사용됨.
 
 TLS 프로토콜은 두개 이상의 컴퓨터 통신 어플리케이션 간에 인증서를 사용하여 개인정보와 데이터 무결성, 사이트의 신뢰성을 포함하는 암호화를 제공하는 것을 목표로 함. application layer(TCP/IP model 기준)에서 실행되며 TLS v1.3 기준 TLS record, TLS handshake 그리고 TLS Alert 세가지 프로토콜로 구성됨.
-
-## TLS Handshake Protocol
-
-Handshake Protocol은 연결에서 Security parameter를 협의(negotiate)하기 위해 사용됨. Handshake 메시지는 TLS Record Layer에 제공되며, TLS Record Layer는 현재 활성화된 연결에 의해 처리되고 하나 이상의 TSLPlaintext와 TLSCipertext 구조 내에 캡슐화됨.
 
 ## TLS가 해주는것
 
@@ -28,7 +24,7 @@ TLS는 성능상의 이유로 두가지 암호화 기법을 사용함. 이를 �
 
 ### symmetric-key cryptography (symmetric cryptography)
 
-대칭 키 암호화 방식은 동일한 키로 암호화와 복호화가 가능한것임. 같은 키가 사용되는 만큼 보안에 취약하며 대칭 키를 전달하다가 intercept 당하면 문제가 심각해짐. 이런 문제를 해결하기 위해 나온게 공개키 방식임.
+대칭키 암호화 방식은 동일한 키로 암호화와 복호화가 가능한것임. 같은 키가 사용되는 만큼 보안에 취약하며 대칭 키를 전달하다가 intercept 당하면 문제가 심각해짐. 이런 문제를 해결하기 위해 나온게 공개키 방식임.
 
 ### public-key cryptography (asymmetric cryptography)
 
@@ -61,12 +57,15 @@ TLS는 암호화된 데이터를 전송하기 위해서 symmetric key와 asymmet
 
 처음 연결을 수립할때 하는 Handshake 과정에서는 asymmetric key방식을 이용하고 연결된 뒤 데이터를 주고 받을때는 session key값을 이용하여 symmetric key방식으로 데이터를 암호화하고 복호화함. 데이터 전송이 끝나면 TLS 통신이 끝났음을 서로에게 알려주고, session key를 폐기함. 이런 방식은 asymmetric key 방식이 자원을 많이 사용하기 때문에 도입되게 됨.
 
-### Handshake 과정
+### Handshake 과정 (TLS v1.2)
 
 기본적으로 TLS는 TCL 프로토콜 위에서 작동하기 때문에 TCP Handshake 과정 이후 TLS Handshake 과정이 시작됨.
 
 ![TLS v1.2](/image/TLSv1.2.png)
 > daum.net 에서 TLS v1.2 을 사용하여 연결하는 과정 wireshark 패킷 캡쳐
+
+![TLS v1.2 Full](/image/TLSv1.2-FULL-wiki.svg.jpg)
+> TLS v1.2 handshake 과정. 출처: https://en.wikipedia.org/wiki/Transport_Layer_Security#SSL_1.0,_2.0,_and_3.0
 
 1. client hello: 클라이언트가 서버에 접속. 이 과정에서 클라이언트 측에서 다음과 같은 정보를 전송함.
    1. 랜덤 데이터
@@ -82,13 +81,31 @@ TLS는 암호화된 데이터를 전송하기 위해서 symmetric key와 asymmet
 3. 클라이언트는 서버의 인증서가 CA에서 발급된 것인지 확인하기 위해 CA리스트를 확인함. 만약 없다면 사용자에게 경고 메시지를 보냄. 리스트에 있다면 클라이언트에 내장된 CA의 public key를 활용하여 인증서를 복호화함. 복호화에 성공했다면 CA의 개인키로 암호화 되었다는 것이므로 서버를 신뢰할 수 있음. 그리고 서버에서 받은 랜덤 데이터와 클라이언트에서 생성했던 랜덤 데이터를 조합해여 pre master secret를 생성함. 이 키는 세션단게에서 데이터를 주고 받을때 암호화 하기 위해 사용됨! 또한 을션에선 대칭키 방식으로 작동하기 때문에 절대 유출되면 안됨. 이 pre master secret을 인증서 안에 들어있는 서버의 public key로 암호화하여 서버로 전송함. 
 ![client key exchange packet](/image/TLSv1.2-client-key-exchange.png)
 4. 서버는 클라이언트가 전송한 pre master secret 값을 자신의 private key로 복호화함. 복호화에 성공하면 신뢰할 수 있다는게 되며 서버와 클라이언트 모두 pre master secret을 공유함. 양 측에서 pre master secret을 일련의 과정을 거쳐 master secret으로 만들고, 이를 기반으로 session key를 생성함. 
-![server key exchange](/image/TLSv1.2-server-handshake-msg.png)
+![server key exchange](/image/TLSv1.2-server-key-exchange.png)
+![server handshake message](/image/TLSv1.2-server-handshake-msg.png)
 5. Handshake 과정이 끝나며 종료되었음을 서로에게 알림.
 
 +) 첨부한 wireshark 패킷 캡쳐 이미지와 내용이 다소 차이 있지만 흐름은 같으며 차이는 대략적으로 다음과 같음.
 - Encrypted Handshake Message가 오고 가면서 Handshake 과정이 끝남을 알리는것임.
 - Server Hello 과정과 Certificate 전송 과정이 별개임
-- pre master secret를 언급했는데, 이는 Server|client key exchange 과정에서 EC Diffie-Hellman server|client params이 전달되는 과정에서 x축들이 pre master secret가 됨. [링크 참고](https://crypto.stackexchange.com/questions/43290/how-is-pre-master-secret-encrypted-when-ecc-is-used)
+- pre master secret를 언급했는데, 이는 Server|client key exchange 과정에서 EC Diffie-Hellman server|client params ([ECDH란?](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie%E2%80%93Hellman))이 전달되는 과정에서 x축들이 pre master secret가 됨. [링크 참고](https://crypto.stackexchange.com/questions/43290/how-is-pre-master-secret-encrypted-when-ecc-is-used)
+
+### TLSv1.3의 Handshake
+
+TLSv1.3에서는 TLSv1.2에서 두번 왕복해야 했던 것을 한번으로 압축함. 
+
+- client hello에서 연결에 사용될 cipher를 추측하고 그에 대한 키를 공유함.
+- server hello에서는 공유된 키가 있으므로 cipher suite만 선택하면 키를 생성할 준비가 완료 되므로 server hello, key share, 암호화된 인증서, finish 메시지를 보냄.
+- 클라이언트는 이 정보들을 받아서 공유된 키로 키를 생성하고, 인증서를 확인한뒤 finish가 됨. 바로 HTTP 요청을 보낼 수 있어짐!
+
+![TLSv1.3 wireshark](/image/TLSv1.3-wireshark-flow.png)
+>wireshark로 naver.com에 접속할 때 TLSv1.3 flow
+
+![TLSv1.2 cloudflare](/image/cloudflare-TLS1.2.png)
+>cloudflare TLSv1.2 flow
+
+![TLSv1.3 cloudflare](/image/cloudflare-TLS1.3.png)
+>cloudflare TLSv1.3 flow
 
 # Reference
 
@@ -98,8 +115,12 @@ TLS는 암호화된 데이터를 전송하기 위해서 symmetric key와 asymmet
 
 [A detailed look at RFC 8446(TLS 1.3) cloudflare 블로그](https://blog.cloudflare.com/rfc-8446-aka-tls-1-3/)
 
+[TLS 1.3 overview cloudflare 블로그](https://blog.cloudflare.com/tls-1-3-overview-and-q-and-a/)
+
 [TLS wikipedia](https://en.wikipedia.org/wiki/Transport_Layer_Security)
 
 [TLS 영문 블로그](https://hpbn.co/transport-layer-security-tls/)
 
 [생활코딩 SSL/TLS](https://opentutorials.org/course/228/4894)
+
+[TLS 상세설명 영문 블로그](https://hpbn.co/transport-layer-security-tls/)

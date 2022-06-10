@@ -42,6 +42,7 @@
 		"tmpfs",
 		"vfork",
 		"vsftpd",
+		"wireshark",
 		"WORKDIR",
 		"yongjule"
 	]
