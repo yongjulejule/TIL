@@ -36,11 +36,14 @@ Nginx는 마스터 프로세스가 있어서 config를 읽고 검증한 후 그�
 
 # Reference
 
-https://ssdragon.tistory.com/60
-    [https://oxylabs.io/blog/reverse-proxy-vs-forward-proxy](https://oxylabs.io/blog/reverse-proxy-vs-forward-proxy)
-    
-    [https://dzone.com/articles/nginx-reverse-proxy-and-load-balancing](https://dzone.com/articles/nginx-reverse-proxy-and-load-balancing)
-    
-    [https://www.upguard.com/blog/reverse-proxy-vs-load-balancer](https://www.upguard.com/blog/reverse-proxy-vs-load-balancer)
-    
-    [https://www.digitalocean.com/community/tutorials/understanding-nginx-http-proxying-load-balancing-buffering-and-caching](https://www.digitalocean.com/community/tutorials/understanding-nginx-http-proxying-load-balancing-buffering-and-caching)
+[https://ssdragon.tistory.com/60](https://ssdragon.tistory.com/60)
+
+[https://medium.com/@su_bak/nginx-nginx란-cf6cf8c33245](https://medium.com/@su_bak/nginx-nginx%EB%9E%80-cf6cf8c33245)
+
+[https://oxylabs.io/blog/reverse-proxy-vs-forward-proxy](https://oxylabs.io/blog/reverse-proxy-vs-forward-proxy)
+
+[https://dzone.com/articles/nginx-reverse-proxy-and-load-balancing](https://dzone.com/articles/nginx-reverse-proxy-and-load-balancing)
+
+[https://www.upguard.com/blog/reverse-proxy-vs-load-balancer](https://www.upguard.com/blog/reverse-proxy-vs-load-balancer)
+
+[https://www.digitalocean.com/community/tutorials/understanding-nginx-http-proxying-load-balancing-buffering-and-caching](https://www.digitalocean.com/community/tutorials/understanding-nginx-http-proxying-load-balancing-buffering-and-caching)
