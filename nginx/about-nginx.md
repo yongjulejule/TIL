@@ -29,10 +29,13 @@ Nginx는 마스터 프로세스가 있어서 config를 읽고 검증한 후 그�
     - application level (HTTP level)의 로드벨런싱은 리버스 프록시와 비슷하지만, 리버스 프록시는 HTTP 요청에 국한되는 반면 로드밸런싱은 다른 계층에 대하여도 조절할 수 있음. Nginx에서 제공하는 Load balancing은 HTTP 한정임.
     
     
-- Nginx with SSL
-    - Nginx를 리버스 프록시 서버를 사용하여 모든 요청에 대해 https 연결을 요구할 수 있음.
-    - 각 앱마다 SSL을 적용하는건 몹시 힘듦!
-    - 하지만 Nginx에서 SSL을 적용하고 리버스 프록시로 활용하여 내부 다른 서버와 소통하면 간단하게 해결됨.
+- Nginx with TLS
+    - Nginx를 리버스 프록시 서버로 사용하여 모든 요청에 대해 https 연결을 요구할 수 있음.
+    - 각 앱마다 TLS을 적용하는건 몹시 힘듦!
+    - 하지만 Nginx에서 TLS을 적용하고 리버스 프록시로 활용하여 내부 다른 서버와 소통하면 간단하게 해결됨.
+
+이 외에도 config 파일을 통해 worker connection, fastCGI, HTTP version 등 다양한 정보를 설정할 수 있음. [참고](/nginx/nginx-config.md)
+
 
 # Reference
 
