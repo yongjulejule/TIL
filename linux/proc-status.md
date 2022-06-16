@@ -74,6 +74,8 @@ voluntary_ctxt_switches:        8525
 nonvoluntary_ctxt_switches:     5542
 ```
 
+TODO: Docker container process의 status 추가하기
+
 [session id 정리](https://mug896.github.io/bash-shell/session_and_process-group.html)
 [resident set size](https://en.wikipedia.org/wiki/Resident_set_size#:~:text=In%20computing%2C%20resident%20set%20size,the%20executable%20were%20never%20loaded.)
 [Huge tlb](https://access.redhat.com/documentation/ko-kr/red_hat_enterprise_linux/6/html/performance_tuning_guide/main-memory)
