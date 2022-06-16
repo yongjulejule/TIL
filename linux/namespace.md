@@ -109,7 +109,8 @@ PID namespace는 pid 숫자의 space를 격리시키며, 따라서 서로 다른
 
 nsenter(namespace enter) 커멘드를 통해 네임스페이스에 들어갈 수 있으며 이는 `docker exec`과 유사함
 
-![pid namespace enter](/image/linux-pid-nsenter.png)
+![pid namespace enter](/image/linux-pid-namespace-nsenter.png)
+> host에서 pstree로 컨테이너 프로세스의 process tree를 확인하고, nsenter를 통하여 네임스페이스 안에서 pstree를 확인해보면 다른것을 확인해 볼 수 있음.
 
 ## User namespace
 
