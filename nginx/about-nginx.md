@@ -12,7 +12,7 @@ Nginx는 마스터 프로세스가 있어서 config를 읽고 검증한 후 그�
 
 - 프록시
     
-    ![cgi.006.jpeg](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/1b29d170-189e-4e63-baff-5c1dca73ba3f/cgi.006.jpeg)
+    ![cgi.006.jpeg](/image/nginx-proxy.jpeg)
     
     - 프록시는 서버와 클라이언트 사이에서 중계역할을 함. 요청을 받으면 프록시 서버를 거쳐 다음 목적지로 가는것. 이는 보안상의 이유로 사용할 수 있고 프록시 서버에서 캐싱을 통해 빠르게 요청에 응답할 수 있다는 장점도 있음.
     - Forward Proxy (proxy)
