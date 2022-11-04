@@ -1,5 +1,22 @@
 #!/usr/bin/env bash
 
+if [ $# -eq 2 ] && [ "$1" == "-f" ]; then
+	input="Y"
+	if [ -f "$2" ]; then
+		echo "File named [$2] Aleady exists. Overwrite? (Y/n)"
+		read input
+	fi
+	if [ "$input" == "Y" ]; then
+		echo "Creating file [$2]"
+		exec 1<>"$2"
+	else
+		echo "Exiting"
+		exit 1
+	fi
+fi
+
+
+
 cat <<EOF
 # TIL
 
