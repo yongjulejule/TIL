@@ -81,6 +81,7 @@ Today I Learned
   - [env-command](shell/env-command.md)
   - [envsubst-command](shell/envsubst-command.md)
   - [set-command](shell/set-command.md)
+  - [bash-parameter-expansion](shell/bash-parameter-expansion.md)
   - [if-else-statement](shell/if-else-statement.md)
 
 ## ssh

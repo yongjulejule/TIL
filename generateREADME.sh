@@ -18,7 +18,6 @@ for d in $dirs; do
 	fi
 	echo -e "\n## $d\n"
 	filepath=$(find $d -type f ! -name "README.md")
-	#filename=$(find $d -type f ! -name "README.md" -exec basename -s .md {} +)
 	filename=$(echo $filepath | xargs basename -s .md)
 	length=$(( $(echo $filepath | wc -w) - 1 ))
 	filepath=($filepath)
