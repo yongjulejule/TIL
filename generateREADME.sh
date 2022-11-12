@@ -24,8 +24,9 @@ Today I Learned
 
 새로 알게 된 내용들을 저장하는 곳입니다.
 
-# Index
 EOF
+
+echo "# Index"
 
 dirs=$(file * | grep directory | tr -d ":" | cut -d ' ' -f 1)
  
@@ -34,13 +35,13 @@ for d in $dirs; do
 		continue
 	fi
 	echo -e "\n## $d\n"
+	echo -e "|Title|Modified at|"
+	echo -e "|:---|:---|"
 	filepath=$(find $d -type f ! -name "README.md")
 	filename=$(echo $filepath | xargs basename -s .md)
-	length=$(( $(echo $filepath | wc -w) - 1 ))
-	filepath=($filepath)
-	filename=($filename)
-	for i in `seq 0 $length`; do
-		echo "  - [${filename[$i]}](${filepath[$i]})"
-	done;
+	for f in $filename; do
+		date=$(git log -1 --format=%ci -- $d/$f.md)
+		echo "|[$f]($d/$f.md)| ${date/ *} |"
+	done
 done
 
