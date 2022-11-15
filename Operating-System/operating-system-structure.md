@@ -10,6 +10,7 @@ os마다 차이가 있지만 보통 위와 비슷한 구조임.
 - user interface는 유저를 위한 인터페이스
 
 ## Reference
+
 > _Abraham Silberschatz , Greg Gagne & Peter B. Galvin (2018). Operating System Concepts (10th ed.) U.S. : willy_
 
 

@@ -34,10 +34,35 @@ physical memory에 접근하는 상대적인 속도만 고려할 것이 아니�
 
 ### Address Binding
 
+일반적으로 프로그램은 disk에서 binary executable file 으로 저장되어 있고, 실행하기 위해선 프로세스라는 컨텍스트로 메모리에 올라와야 한다.
 
+[linker and loader](./linker-and-loaders.md)
+
+프로세스가 실행되면, 메모리의 instruction과 data에 접근할 수 있게 되며, 프로세스가 종료됐을땐 다른 프로세스가 사용할 수 있도록 메모리가 반환된다. 
+
+대부분의 시스템에선 user process가 physical memory의 어디든 존재할 수 있다. 따라서 컴퓨터의 address space가 00000에서 시작하더라도, 프로세스의 시작 주소는 00000이 아닐 수 있다.
+
+소스 프로그램의 주소는 일반적으로 symbolic address 이며, 컴파일러는 symbolic address를 relocatable address로 `bind` 한다( 예를 들면, 현재 모듈에서 14바이트 떨어진 곳). linker나 loader는 relocatable address를 absolute address로 변환한다(74000 + 14).
+
+`binding` 이 어떤 방식으로 이루어 질 수 있는지 알아보자.
+
+### Logical vs Physical Address space
+
+CPU에 의하여 만들어진 address는 주로 logical address를 나타내는 반면 memory unit이 보는 address, 즉 메모리의 memory-address register에 load 되는 address는 physical address를 나타낸다.
+
+![MMU](/image/main-memory-memory-management-unit.jpeg)
+
+compile 이나 load 과정에서 logical address와 physical address 는 같지만, execution-time의 address-binding scheme 의 결과에 따라 달라질 수 있다. 이 상황에서 logical address를 보통 virtual address라 부르지만, 혼용해서 쓰기도 한다. 한 프로그램에 의하여 생성된 logical addresses의 집합을 logical address space라 부르며 이 logical addresses 에 대응하는 physical addresses의 집합을 physical address space라 부른다. 따라서, execution-time address-binding scheme에서, logical address space와 physical address space는 서로 다를 수 있다.
+
+실행중 virtual addresses에서 physical addresses로의 매핑은 MMU(memory-management unit)이라는 하드웨어 장치에 의해 일어난다. 다양한 방식으로 매핑을 할 수 있으며, [위에서 살펴본](#basic-hardware) base-register를 사용하는 방식이 간단히 MMU scheme 을 일반화한 것이다. 이제 base-register는 "relocation register" 라고 하자. 만일 relocation register의 값이 14000이고, user-process에서 address 346에 접근하려고 한다면, MMU는 346 + 14000 = 14346으로 변환하는 방식이다.
+
+user program은 절대 실제 physical address에 직접 접근하지 않는다. user program은 logical address만 사용하며, MMU가 logical address를 physical address로 변환한다.
+
+### Dynamic Loading
+
+과거엔 프로그램 전체와 모든 데이터를 
 
 ## 메모리 관리
-
 
 - 메모리는 현대의 컴퓨터 체계 운영의 핵심이며 커다란 바이트들의 배열로 이루어져 있고, 각 바이트는 메모리 주소를 가지고 있다.
 - 각 프로세스에 address space를 할당하는 한 방법은 base 와 limit registers를 사용하는 것이다. base register는 프로세스의 시작 주소를 가리키고, limit register는 프로세스의 크기를 가리킨다. 
@@ -55,6 +80,7 @@ physical memory에 접근하는 상대적인 속도만 고려할 것이 아니�
 
 # reference
 
-_공룡책_
+> _Abraham Silberschatz , Greg Gagne & Peter B. Galvin (2018). Operating System Concepts (10th ed.) U.S. : willy_
+
 
 _쉽게 배우는 운영체제_
