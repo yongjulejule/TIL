@@ -60,12 +60,46 @@ user program은 절대 실제 physical address에 직접 접근하지 않는다.
 
 ### Dynamic Loading
 
-과거엔 프로그램 전체와 모든 데이터를 
+과거엔 프로세스를 실행하기 위해 프로그램 전체와 모든 데이터를 physical memory에 올려야 해서, 프로그램의 크기에 제한이 있었다. 메모리를 더 잘 활용하기 위해 "dynamic loading"을 사용하게 되었다. 이 방식은 하나의 루틴이 호출되기 전까지 메모리에 올라오지 않는다. 모든 루틴은 relocatable load format으로 disk에 저장되어 있으며, 메인 프로그램이 메모리에 load 되고 실행된다. 한 루틴이 다른 루틴을 호출하면, 호출한 루틴은 메모리에 원하는 루틴이 존재하는지 확인하고, 존재하지 않으면 메모리에 load 하고 프로그램의 address table을 업데이트 하기 위해 relocatable linking loader 가 호출된다. 
+
+"dynamic loading" 덕분에 특정 루틴이 필요 할 때만 load 되며 특히 규모가 큰 프로그램에서 에러 상황 처럼 자주 발생하지 않는 케이스를 다룰 때 유용하다. 이 방식에서 이점을 얻기 위해선 프로그램을 만드는 유저에게 책임이 있고, OS는 "dynamic loading" 을 구현한 라이브러리 루틴을 제공하여 프로그래머를 도와준다.
+
+### Dynamic Linking and Shared Libraries
+
+DLLs(Dynamically linked libraries) 는 프로그램이 실행될 때 linking되는 시스템 라이브러리다. 이 방식은 dynamic loading과 유사하지만, loading 과정이 아니라 linking 과정을 실행 때까지 미루는 것이다. 이 방식은 프로그램의 크기를 줄일 수 있으며 main memory를 더 효율적으로 사용할 수 있다. DLLs 는 라이브러리가 여러 프로세스에서 사용되는 경우 main memory에 한 번만 load 되기 때문이다. 이런 이유에서 DLLs 는 shared libraries 라고도 불린다.
+
+프로그램이 dynamic library에 있는 루틴을 참조할 때, loader는 DLL을 찾아 필요하다면 메모리에 loading 한다. 그리고 dynamic library의 함수 주소를 DLL이 저장된 메모리상의 주소로 맞춘다.
+
+Dynamic loading 과 다르게, dynamic linking과 shared library은 OS의 도움을 필요로 한다. 만일 프로세스의 메모리가 다른 프로세스로부터 protected인 상태일때, OS만이 다른 프로세스의 메모리 영역에 있는 루틴인지 체크할 수 있고, 또 같은 메모리 주소에 접근 할 수 있는지 허가할 수 있기 때문이다. 
+
+
+## Contiguous Memory Allocation
+
+main memory는 os와 user processes 모두를 위해 사용되기 때문에, 메모리를 가능한 효율적으로 할당해야 한다. 주로 OS 를 메모리의 높은 주소에 할당한다. 유저 프로세스의 경우, 일반적으로 여러개의 프로세스가 동시에 메모리에서 사용되기 원한다. "contiguous memory allocation" 에선, 각 프로세스는 메모리의 한 섹션에 포함되고, 이 섹션들은 연속적으로 (contiguous) 배치된다.
+
+### Memory Protection
+
+다른 프로세스가 한 프로세스의 영역을 침범하면 안되는데, 이를 memory protection이라 한다. 한 가지 단순한 방법은 위에서 논의한 relocation register 와 limit register를 이용하여 MMU가 Logical address를 Physical address로 겹치지 않게 변환하면 된다.
+
+### Memory Allocation
+
+프로세스에 메모리를 할당하는 방식을 단순하게 생각해보면, 프로세스의 크기에 딱 맞게 메모리를 할당하는 것이다. 이 "variable-partition" scheme에선, OS가 메모리의 어느 부분에 어떤 프로세스가 있다는 Table을 갖고 있어야 한다. 처음엔 프로세스가 없어서 메모리에 하나의 큰 "hole" 가 있고, 프로세스가 hole을 채우면서 메모리를 할당한다. 그리고 프로세스가 생성되고 종료됨에 따라 수많은 size의 hole들이 생기게 된다. 이 과정이 반복되면, dynamic storage-allocation problem 이라는 문제가 발생하는데, 이는 메모리의 hole 에 프로세스를 어떻게 배정할지에 대한 문제이다.
+
+- first-fit : 사이즈가 충분한 첫 번째 hole 에 배정 -> search가 빠름
+- best-fit : 사이즈가 맞는 것 중 가장 작은 hole 에 배정 -> 메모리를 가장 효율적으로 사용
+- worst-fit : 사이즈가 가장 큰 hole 에 배정 -> 너무 작은 hole 이 생기는 것을 방지해줌
+
+메모리 사용성과 속도 면에서 worst-fit이 최악이고, first-fit 과 best-fit 은 큰 차이가 없지만 일반적으로 first-fit이 더 빠르다.
+
+### Fragmentation
+
+메모리 할당과 해제가 반복되면서, 메모리 공간이 수많은 빈 조각으로 나뉘게 된다. 이때 남은 공간이 충분한데도 불구하고 빈 공간이 연속적이지 않아 프로세스를 할당할 수 없는 경우를 external fragmentation 이라고 한다. "first-fit" 이나 "best-fit" 방식을 사용하면 external fragmentation이 많이 발생하는 문제가 발생한다.
+
 
 ## 메모리 관리
 
 - 메모리는 현대의 컴퓨터 체계 운영의 핵심이며 커다란 바이트들의 배열로 이루어져 있고, 각 바이트는 메모리 주소를 가지고 있다.
-- 각 프로세스에 address space를 할당하는 한 방법은 base 와 limit registers를 사용하는 것이다. base register는 프로세스의 시작 주소를 가리키고, limit register는 프로세스의 크기를 가리킨다. 
+- 각 프로세스에 address space를 할당하는 한 방법은 base 와 limit registers를 사용하는 것이다. base register는 프로세스의 시작 주소를 가리키고, limit register는 프로세스의 크기를 가리킨다.
 - symbolic address 와 실제 physical address를 매핑은 (1) compile, (2) load, (3) execution time에 이루어진다.
 - CPU에 의해 생성된 주소는 logical address라고 알려져 있으며, 이는 MMU(memory management unit)에 의해 physical address로 변환된다.
 - 메모리 할당을 하는 한가지 접근 방식은 다양한 크기의 연속 메모리 파티션을 할당하는 방식이다. 이 파티션들은 (1) first-fit, (2) best-fit, (3) worst-fit 라는 세가지 전략으로 할당 될 수 있다. 

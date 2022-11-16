@@ -1,3 +1,0 @@
-# CPU-scheduling-algorithm
-
-
