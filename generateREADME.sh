@@ -8,7 +8,7 @@ if [ $# -eq 2 ] && [ "$1" == "-f" ]; then
 	fi
 	if [ "$input" == "Y" ]; then
 		echo "Creating file [$2]"
-		exec 1<>"$2"
+		exec 1>"$2"
 	else
 		echo "Exiting"
 		exit 1

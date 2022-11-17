@@ -11,8 +11,10 @@ Today I Learned
 |Title|Modified at|
 |:---|:---|
 |[linker-and-loaders](Operating-System/linker-and-loaders.md)| 2022-11-15 |
-|[main-memory](Operating-System/main-memory.md)| 2022-11-15 |
+|[main-memory](Operating-System/main-memory.md)| 2022-11-16 |
 |[operating-system-structure](Operating-System/operating-system-structure.md)| 2022-11-15 |
+|[paging](Operating-System/paging.md)|  |
+|[virtual-memory](Operating-System/virtual-memory.md)|  |
 
 ## RFC
 
@@ -119,11 +121,6 @@ Today I Learned
 |[ssh-key-gen](ssh/ssh-key-gen.md)| 2022-04-28 |
 
 ## web
-
-|Title|Modified at|
-|:---|:---|
-|[CGI](web/CGI.md)| 2022-06-08 |
-b
 
 |Title|Modified at|
 |:---|:---|

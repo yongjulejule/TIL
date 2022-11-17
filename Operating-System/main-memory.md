@@ -91,12 +91,16 @@ main memory는 os와 user processes 모두를 위해 사용되기 때문에, 메
 
 메모리 사용성과 속도 면에서 worst-fit이 최악이고, first-fit 과 best-fit 은 큰 차이가 없지만 일반적으로 first-fit이 더 빠르다.
 
-### Fragmentation
+### Fragmentation(단편화)
 
-메모리 할당과 해제가 반복되면서, 메모리 공간이 수많은 빈 조각으로 나뉘게 된다. 이때 남은 공간이 충분한데도 불구하고 빈 공간이 연속적이지 않아 프로세스를 할당할 수 없는 경우를 external fragmentation 이라고 한다. "first-fit" 이나 "best-fit" 방식을 사용하면 external fragmentation이 많이 발생하는 문제가 발생한다.
+메모리 할당과 해제가 반복되면서, 메모리 공간이 수많은 빈 조각(hole)으로 나뉘게 된다. 이때 남은 공간이 충분한데도 불구하고 빈 공간이 연속적이지 않아 프로세스를 할당할 수 없는 경우를 external fragmentation 이라고 한다. "first-fit" 이나 "best-fit" 방식을 사용하면 external fragmentation이 많이 발생하는 문제가 발생한다.
+
+internal fragmentation 도 존재한다. 이는 프로세스의 크기가 hole의 크기보다 미세하게 작아서, 메모리에 load 후 너무 적은 공간이 남는 경우이다. hole 이 너무 작아서 프로세스를 할당 할 수 없고, 이 hole을 추적하는 오버헤드가 오히려 커지는 문제가 생긴다.
+
+external fragmentation 의 한가지 해결 방법은 "compaction" 이다. 빈 메모리들을 하나의 커다란 블록으로 만드는 방식이나, relocation이 동적으로 이루어지는 경우에만 가능하고, 비용이 많이 든다. 또 다른 해결 방법은 프로세스의 logical address space가 연속적이지 않아도 되도록 하는 방법이다. physical memory에 가용한 공간이 있으면 어디에나 메모리를 할당할 수 있어지며, 주로 paging 에서 사용되는 기법이다.
 
 
-## 메모리 관리
+## 요약
 
 - 메모리는 현대의 컴퓨터 체계 운영의 핵심이며 커다란 바이트들의 배열로 이루어져 있고, 각 바이트는 메모리 주소를 가지고 있다.
 - 각 프로세스에 address space를 할당하는 한 방법은 base 와 limit registers를 사용하는 것이다. base register는 프로세스의 시작 주소를 가리키고, limit register는 프로세스의 크기를 가리킨다.
@@ -104,17 +108,12 @@ main memory는 os와 user processes 모두를 위해 사용되기 때문에, 메
 - CPU에 의해 생성된 주소는 logical address라고 알려져 있으며, 이는 MMU(memory management unit)에 의해 physical address로 변환된다.
 - 메모리 할당을 하는 한가지 접근 방식은 다양한 크기의 연속 메모리 파티션을 할당하는 방식이다. 이 파티션들은 (1) first-fit, (2) best-fit, (3) worst-fit 라는 세가지 전략으로 할당 될 수 있다. 
 - 현대 운영체제는 메모리 관리를 위하여 페이징(paging)을 사용한다. 페이징은 physical memory를 frame 라고 하는 고정된 크기의 블록으로 나누고, virtual memory를 page 라고 하는 고정된 크기의 블록으로 나눈다.
-- 페이징이 적용될 때, logical address는 page number와 page offset라는 두가지 부분으로 나뉘어진다. page number 는 page 를 보유한 physical memory 의 frame 을 포함하는 프로세스별 페이지 테이블에 대한 인덱스 역할을 한다.(?) page offset은 frame이 참조되는 구체적인 위치를 가리킨다.
+- 페이징이 적용될 때, logical address는 page number와 page offset라는 두가지 부분으로 나뉘어진다. page number 는 page 를 보유한 physical memory 의 frame 을 포함하는 프로세스별 페이지 테이블에 대한 인덱스 역할을 한다. page offset은 frame이 참조되는 구체적인 위치를 가리킨다.
 - TLB(translation look-aside buffer) 는 페이지 테이블에 대한 하드웨어의 cache 이다. 각 TLB의 entry는 page number와 그에 대응하는 frame number를 가지고 있다. 
 - 페이징 시스템을 위한 address translation에서 TLB를 사용하는 것은 logical address에서 페이지 넘버를 얻기 위함도 있고, 페이지를 위한 frame가 TLB에 있는지 체크하기 위한 목적도 있다. TLB에 frame이 있다면, 여기서 frame이 얻어지고, 그렇지 않으면 page table에서 다시 찾아야 한다.
 - Hierarchical paging은 logical address를 여러개로 분할하고, 각각은 다른 level의 page table을 나타낸다. address가 32bits 넘게 확장될 수 있기 때문에, hierarchial level 은 커질 수 있다. 이 문제를 해결하기 위한 두가지 전략은 (1) hashed page tables, (2) inverted page tables 이다.
 - Swapping 은 시스템이 pages를 프로세스에서 disk로 옮길 수 있게 해준다.
 
-
-
 # reference
 
 > _Abraham Silberschatz , Greg Gagne & Peter B. Galvin (2018). Operating System Concepts (10th ed.) U.S. : willy_
-
-
-_쉽게 배우는 운영체제_
