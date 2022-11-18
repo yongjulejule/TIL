@@ -1,5 +1,6 @@
 {
 	"cSpell.words": [
+		"ASID",
 		"baseimage",
 		"Buildkit",
 		"cgroupfs",
@@ -36,6 +37,7 @@
 		"PCRE",
 		"pipefail",
 		"POSIX",
+		"PTBR",
 		"rwsr",
 		"rwxrw",
 		"seamlessness",

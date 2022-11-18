@@ -99,6 +99,9 @@ internal fragmentation 도 존재한다. 이는 프로세스의 크기가 hole�
 
 external fragmentation 의 한가지 해결 방법은 "compaction" 이다. 빈 메모리들을 하나의 커다란 블록으로 만드는 방식이나, relocation이 동적으로 이루어지는 경우에만 가능하고, 비용이 많이 든다. 또 다른 해결 방법은 프로세스의 logical address space가 연속적이지 않아도 되도록 하는 방법이다. physical memory에 가용한 공간이 있으면 어디에나 메모리를 할당할 수 있어지며, 주로 paging 에서 사용되는 기법이다.
 
+## Paging
+
+[paging 문서](paging.md)
 
 ## 요약
 

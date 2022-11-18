@@ -32,5 +32,25 @@ paging 방법을 사용하기 때문에 external fragmentation 은 발생하지 
 
 ## Hardware Support
 
+page table 은 프로세스 마다 갖고 있는 자료구조이기 때문에, page table 을 가리키는 포인터는 각 프로세스의 PCB 안의 어떤 register value 로 저장되어 있다. CPU 스케쥴러가 특정 프로세스를 실행하려면, 저장된 user page table에서 적절한 hardware page-table value 와 user register 를 리로드 해야한다. 속도가 빠른 hardware register 를 이용하여 page table 을 구현할 수 있지만, 이는 추가적인 컨텍스트 스위칭을 필요로 하고, 크기가 큰 page table 을 사용해야 한다면 적절치 못한 방법이다. 대신, main memory 에서 page table 을 관리하고 PTBR(page-table base register) 가 page table을 가리키게 하면, page tables 는 이 register 하나만 바꾸면 되서 컨텍스트 스위칭의 비용이 줄어든다.
+
+### TLB(Translation Look-Aside Buffer)
+
+PTBR 을 활용하면 컨텍스트 스위칭 면에서 더 빠르지만, main memory 의 PTBR 에서 frame number 를 찾은 뒤, frame 에 접근해야 하기 때문에 메모리 접근이 2번 일어나서 딜레이가 발생한다. 이를 해결하기 위해 특수하고, 작으며 빠른 탐색 하드웨어 캐시인 TLB(Translation Look-Aside Buffer) 를 활용한다.
+
+TLB 는 page number 와 frame number 를 key:value 로 하는 entry로 이루어져 있다. 연관된 메모리에 item 이 제시되면, 해당 item 은 모든 key 와 동시에 비교되어 찾으면 바로 value 를 반환하는 방식이다. 최신 하드웨어는 이 instruction을 pipeline 하여 추가적인 퍼포먼스의 저하가 발생하지 않는다. 하지만 이는 TLB 가 작기 때문에 (32 ~ 1024 entries) 가능한 방식이다.
+
+작동 방식은 다음과 같다.
+
+1. CPU 가 logical address 를 생성하면 MMU 가 TLB 에 page number 가 있는지 확인한다. 
+2. page number 가 있다면 frame number 가 즉시 사용 가능해지며, 바로 메모리에 접근한다.
+3. page number 가 없다면(TLB miss) [위에서 언급한 과정](#basic-hardware)에 따라 page table 을 찾아 frame number 를 찾는다. 이후 TLB 에 page number 와 frame number 를 저장하고, 메모리에 접근한다.
+4. TLB 가 이미 꽉 찼다면, 이미 존재하는 entry 중 어떤 값을 교체할지 결정해야 한다. 
+   - 교체 정책은 LRU(Least Recently Used) 부터 round-robin 까지 다양하다.
+   - 몇몇 TLB 에는 특정 entry 를 교체되지 않도록(wired down) 하는데, 주로 핵심 커널 코드들이 wired down 상태이다.
+
+각 entry 에 ASID(address-space identifier) 를 가진 TLB 도 있는데, 이는 각 프로세스의 address-space 를 보호하기 위해 사용한다.
+
+
 
 
