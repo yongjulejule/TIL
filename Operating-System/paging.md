@@ -49,8 +49,6 @@ TLB 는 page number 와 frame number 를 key:value 로 하는 entry로 이루어
    - 교체 정책은 LRU(Least Recently Used) 부터 round-robin 까지 다양하다.
    - 몇몇 TLB 에는 특정 entry 를 교체되지 않도록(wired down) 하는데, 주로 핵심 커널 코드들이 wired down 상태이다.
 
-각 entry 에 ASID(address-space identifier) 를 가진 TLB 도 있는데, 이는 각 프로세스의 address-space 를 보호하기 위해 사용한다.
+![TLB with physical memory](../image/physical-memory-with-TLB.jpeg)
 
-
-
-
+각 entry 에 ASID(address-space identifier) 를 가진 TLB 도 있는데, 이는 각 프로세스의 address-space 를 보호하기 위해 사용한다. TLB 가 virtual page number 를 resolve 할 때, ASID 가 일치하는지 확인한다. 일치하지 않는다면, TLB miss 로 간주한다. 이 외에도, ASID 는 서로 다른 프로세스의 entry 를 동시에 TLB에 저장될 수 있게 해준다. 이는 TLB 가 매번 page table을 선택하는 것을 방지하여 성능을 향상시킨다.

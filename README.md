@@ -11,10 +11,10 @@ Today I Learned
 |Title|Modified at|
 |:---|:---|
 |[linker-and-loaders](Operating-System/linker-and-loaders.md)| 2022-11-15 |
-|[main-memory](Operating-System/main-memory.md)| 2022-11-16 |
+|[main-memory](Operating-System/main-memory.md)| 2022-11-18 |
 |[operating-system-structure](Operating-System/operating-system-structure.md)| 2022-11-15 |
-|[paging](Operating-System/paging.md)|  |
-|[virtual-memory](Operating-System/virtual-memory.md)|  |
+|[paging](Operating-System/paging.md)| 2022-11-18 |
+|[virtual-memory](Operating-System/virtual-memory.md)| 2022-11-17 |
 
 ## RFC
 
