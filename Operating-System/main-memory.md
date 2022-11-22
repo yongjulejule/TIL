@@ -28,7 +28,7 @@ Main memory와 각 processing core에 탑재된 registers는 CPU가 직접 접�
 
 physical memory에 접근하는 상대적인 속도만 고려할 것이 아니라, 정확한 operation을 보장하여야 한다. OS에 user process가 접근하는 것을 막아야 하며, 다른 user process에 접근하는 것도 막아야 한다. OS는 일반적으로 CPU와 메모리 엑세스 사이에 개입하지 않기 때문에(성능상의 이유), 이는 하드웨어에 의하여 보장되어야 한다. 한 가지 방법을 살펴보자.
 
-![main-memory-basic-hardware](../image/main-memory-basic-hardware.png)
+![main-memory-basic-hardware](../image/main-memory-basic-hardware.jpg)
 
 위 그림과 같이, 프로세스 메모리 영역의 범위를 결정 할 수 있어야 한다. base register와 limit register 라는 두 개의 registers를 이용하여 이를 관리한다. base register는 프로세스 내부에서 유효한 physical memory address의 가장 작은 주소이며 limit register 에는 프로세스가 사용하는 메모리의 범위가 저장된다. user process 가 생성될 때 registers를 같이 생성하고, 만약 프로세스가 메모리 영역을 침범하였을때, fatal error를 발생시킨다.
 
@@ -131,6 +131,24 @@ inverted page table 에는 메모리의 각 실제 page(또는 frame)에 대해 
 만약 shared memory에 대한 접근이 필요하다면, 다른 방법에선 프로세스마다 page table 이 있어서 같은 physical memory 를 가리키는 page 가 있을 수 있었지면, 여기선 사용할 수 없고, 만약 같은 메모리에 접근한다면 page fault 가 발생한다.
 
 ## Swapping
+
+프로세스의 instruction 와 data 는 실행되기 위하여 메모리에 있어야 하지만, 어떤 프로세스나, 그 일부는 메모리에서 백업 저장소 (backing store) 에 임시적으로 "swap" 될 수 있으며, 실행을 위해 다시 메모리로 올라올 수 있다. 이런 "swapping" 은 physical memory 보다 더 큰 address space 를 다루기 위해 필요하다.
+
+### Standard Swapping
+
+standard swapping 은 프로세스 전체를 백업 저장소에 옮기는 것이다. 백업 저장소는 주로 빠른 secondary storage 가 되며 프로세스를 항상 담을 수 있을만큼 커야하고, 이 메모리 이미지에 직접 접근할 수 있어야 한다. 또한, 백업 저장소에 스왑이 되면, 프로세스에 관련된 데이터들이 같이 저장 되어야 한다. 운영 체제 또한 프로세스의 스왑 여부에 대한 메타데이터를 유지해야 한다.
+
+유휴 상태(idle) 인 프로세스들이 swapping 에 대한 좋은 대상이며 메모리에 할당된 유휴 상태의 프로세스가 차지하던 공간은 다른 프로세스에게 할당될 수 있다.
+
+하지만 이 방식은 과거 유닉스 시스템에서 사용하던 방식이며, 프로세스 전체를 swapping 하는 비용이 비싸기 때문에, 현재는 거의 사용되지 않는다.
+
+## Swapping with paging
+
+리눅스나 윈도우를 포함한 대부분의 시스템은 프로세스의 page 를 swap 하는 방식을 사용한다. 이 전략은 여전히 physical memory 이상의 메모리를 사용할 수 있으며, page 몇 개만 swap 할 수 있다.
+메모리에서 백업 저장소로 옮기는걸 "page out" 이라고 하고, 그 반대롤 "page in" 이라고 한다.
+또한 이는 가상메모리와도 연관이 있다.
+
+![swapping with page](swapping-with-page.png)
 
 ## 요약
 
