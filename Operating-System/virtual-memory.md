@@ -2,6 +2,8 @@
 
 virtual memory 는 프로세스의 전체가 메모리에 올라오지 않아도, 실행할 수 있게 해주는 기술이다. physical memory 보다 더 큰 프로세스를 실행할 수 있게 해주며, main memory 를 아주 큰 일련의 배열로 추상화 하여 프로그래머가 메모리 부족에 대한 걱정을 하지 않게 해준다. 또한 shared memory 를 통하여 프로세스간에 파일이나 라이브러리를 공유하게 만들어주고 효율적으로 프로세스 생성도 가능하게 해준다.
 
+![virtual memory structure ](../image/virtual-memory-structure.png)
+
 프로세스의 virtual address space 는 메모리에 프로세스가 어떻게 저장되어 있는지에 대한 논리적인 view 를 나타낸다. 보통, 프로세스의 logical address 는 0부터 시작하며 연속적으로 메모리가 존재한다. physical memory 상에선 page frames 구조로 되어 있고 연속적이지 않지만, 이를 매칭시켜 주는 작업은 MMU 가 해준다.
 
 ## Demand paging
