@@ -21,6 +21,16 @@ Demand paging 은 프로세스의 실행중, 필요한 page 만 load 하는 방�
 
 Demand paging 은 page fault 후 어떤 instruction 도 재실행 할 수 있어야 한다. interrupted process 의 상태를 저장하기 때문에, 손쉽게 재실행이 가능하다.
 
+## Copy on Write
+
+`fork()` 를 활용한 프로세스 생성에선 page sharing 와 비슷한 방식을 이용한 기술로 Demand paging 을 우회할 수 있다. 이는 더 빠르게 프로세스를 생성할 수 있게 해주고, 페이지 생성을 최소화 할 수 있다.
+
+`fork()` 의 작동 방식은 부모 프로세스의 페이지를 복제하여 address space 의 복사본을 만드는 방식이다. 하지만 자식 프로세스들의 대다수는 생성 직후 `exec()` 을 호출하기 때문에 부모 프로세스의 address space 전체를 복제하는것은 비효율적이다. 따라서 "copy-on-write" 라는 방식을 사용하는데, 이는 자식 프로세스 생성시 부모와 페이지를 공유하는 방식이다. 공유된 페이지는 "copy-on-write pages" 라고 마킹되고, 만약 공유된 페이지에서 데이터를 쓰려고(write) 하면 공유된 페이지의 복사본이 생성되어 그 페이지에 데이터가 쓰인다(write).
+
+![fork memory layout](../image/fork-memory-layout.png)
+
+> `vfork()`(virtual memory fork) 의 경우 페이지가 공유되며 새로운 페이지를 생성하지 않기 때문에 데이터를 쓰면(write) 두 프로세스 모두 영향을 받는다.
+
 ## 요약
 
 - virtual memory 는 physical memory 를 아주 큰 저장소의 배열로 추상화 한다.
