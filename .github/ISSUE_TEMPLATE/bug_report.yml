@@ -17,8 +17,11 @@ body:
       placeholder: Tell us what you see!
       value: |
         ## 증상
+        
         ## 재현 방법
+        
         ## 스크린샷
+        
     validations:
       required: true
   - type: dropdown
