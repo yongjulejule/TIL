@@ -5,7 +5,7 @@ labels: ["bug"]
 assignees:
   - 
 body:
-  - type: textarea
+  - type: markdown
     id: what-happened
     attributes:
       label: What happened?
