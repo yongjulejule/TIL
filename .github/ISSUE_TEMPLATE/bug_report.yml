@@ -18,6 +18,9 @@ body:
         
         ## 스크린샷
         
+        ## 기대한 결과
+        
+        
     validations:
       required: true
   - type: dropdown
