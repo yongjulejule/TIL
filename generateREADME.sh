@@ -29,8 +29,10 @@ EOF
 echo "# Index"
 
 dirs=$(file * | grep directory | tr -d ":" | cut -d ' ' -f 1)
+# dirs=($(find . -type d ! -path './.*' | xargs basename))
+# unset dirs[0]
  
-for d in $dirs; do
+for d in ${dirs[@]}; do
 	if [[ $d = "image" ]]; then
 		continue
 	fi

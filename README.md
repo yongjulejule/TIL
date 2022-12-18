@@ -17,10 +17,10 @@ Today I Learned
 |Title|Modified at|
 |:---|:---|
 |[linker-and-loaders](Operating-System/linker-and-loaders.md)| 2022-11-15 |
-|[main-memory](Operating-System/main-memory.md)| 2022-11-18 |
+|[main-memory](Operating-System/main-memory.md)| 2022-12-18 |
 |[operating-system-structure](Operating-System/operating-system-structure.md)| 2022-11-15 |
-|[paging](Operating-System/paging.md)| 2022-11-20 |
-|[virtual-memory](Operating-System/virtual-memory.md)| 2022-11-17 |
+|[paging](Operating-System/paging.md)| 2022-11-21 |
+|[virtual-memory](Operating-System/virtual-memory.md)| 2022-12-02 |
 
 ## RFC
 
@@ -58,7 +58,7 @@ Today I Learned
 
 |Title|Modified at|
 |:---|:---|
-|[reentracy-vs-thread-safety](etc/reentracy-vs-thread-safety.md)|  |
+|[reentracy-vs-thread-safety](etc/reentracy-vs-thread-safety.md)| 2022-11-21 |
 |[vm-port-forwarding](etc/vm-port-forwarding.md)| 2022-05-30 |
 
 ## git
@@ -115,7 +115,7 @@ Today I Learned
 
 |Title|Modified at|
 |:---|:---|
-|[bash-parameter-expansion](shell/bash-parameter-expansion.md)| 2022-11-04 |
+|[bash-parameter-expansion](shell/bash-parameter-expansion.md)| 2022-12-18 |
 |[env-command](shell/env-command.md)| 2022-05-12 |
 |[envsubst-command](shell/envsubst-command.md)| 2022-05-26 |
 |[if-else-statement](shell/if-else-statement.md)| 2022-04-28 |
