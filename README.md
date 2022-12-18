@@ -58,6 +58,7 @@ Today I Learned
 
 |Title|Modified at|
 |:---|:---|
+|[reentracy-vs-thread-safety](etc/reentracy-vs-thread-safety.md)|  |
 |[vm-port-forwarding](etc/vm-port-forwarding.md)| 2022-05-30 |
 
 ## git
