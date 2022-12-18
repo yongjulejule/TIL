@@ -6,7 +6,7 @@
 
 만약 parameter가 @나 \*로 지정되면, parameter의 각 요소의 글자 수를 반환
 
-## $\{parameter#word\} - (1), $\{parameter##word\} - (2)
+<h2> ${parameter#word} - (1), ${parameter##word} - (2) </h2>
 
 - `parameter`의 처음부터 탐색하면서, `word`와 매칭되는 짧은 부분 까지 삭제`(1)`, 매칭되는 가장 긴 부분 까지 삭제`(2)`
 
@@ -51,7 +51,7 @@ md md md md md md HAHA
 md HAHA
 ```
 
-## $\{parameter%word\} - (1), $\{parameter%%word\} - (2)
+<h2> ${parameter%word} - (1), ${parameter%%word} - (2) </h2>
 
 - `parameter`의 끝 부터 탐색하면서, `word`와 매칭되는 가장 짧은 까지 삭제`(1)`, 매칭되는 가장 긴 부분 까지 삭제`(2)`
 
@@ -83,7 +83,7 @@ bash-parameter-expansion.md env-command.md envsubst-command.md if-else-statement
 bash-parameter-expansion env-command envsubst-command if-else-statement README set-command HAHA
 ```
 
-## ${parameter/pattern/string} - (1), ${parameter//pattern/string} - (2), ${parameter/#pattern/string} - (3), ${parameter/%pattern/string} - (4)
+<h2> ${parameter/pattern/string} - (1), ${parameter//pattern/string} - (2), ${parameter/#pattern/string} - (3), ${parameter/%pattern/string} - (4) </h2>
 
 - parameter의 처음부터 탐색하면서, pattern과 처음 매칭되는 부분을 string으로 치환`(1)`, 모든 매칭되는 부분을 string으로 치환`(2)`
 - 첫 글자부터 매칭되는 부분을 string으로 치환`(3)`, 마지막 글자부터 매칭되는 부분을 string으로 치환`(4)`
