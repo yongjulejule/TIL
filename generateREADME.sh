@@ -40,10 +40,14 @@ for d in ${dirs[@]}; do
 	echo -e "|Title|Modified at|"
 	echo -e "|:---|:---|"
 	filepath=$(find $d -type f ! -name "README.md")
-	filename=$(echo $filepath | xargs basename -s .md)
+	# filename=$(echo $filepath | xargs basename -s .md)
+	filename=($(echo $filepath))
+	filename=${filename[@]//.md/}
+
 	for f in $filename; do
-		date=$(git log -1 --format=%ci -- $d/$f.md)
-		echo "|[$f]($d/$f.md)| ${date/ *} |"
+	# echo d/f : $d/$f
+		date=$(git log -1 --format=%ci -- $f.md)
+		echo "|[${f//*\/}]($f.md)| ${date/ *} |"
 	done
 done
 
