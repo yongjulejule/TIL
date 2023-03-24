@@ -16,7 +16,7 @@ postgreSQL server 에 원격 접속을 하기 위해선 다음과 같은 과정�
 - port (integer)
     - 원격 접속시 사용할 포트를 명시해주며, 기본값은 `5432` 이다.
 - password_encryption (enum)
-    - 원격 접속시 사용하는 Role(유저) 패스워드의 암호화 방식을 나타낸다. 암호화에 대한 자세한 내용은 [링크](#password-authentication)에 나와있다.
+    - 원격 접속시 사용하는 Role(유저) 패스워드의 암호화 방식을 나타낸다. 암호화에 대한 자세한 내용은 [Password Authentication](https://www.notion.so/Password-Authentication-3332f4362cd347ceac7b7d3a0084a032) 에 나와있다.
 - 이 외에도 [이곳](https://www.postgresql.org/docs/15/runtime-config-connection.html)에 다양한 설정들이 있다.
 
 # pg_hba.conf 설정
@@ -41,12 +41,15 @@ host   database  user  address      auth-method
     - `replication` 은 미러링을 통하여 다중화 할 때 사용한다고 하는데, 설명은 [링크](https://rastalion.me/postgresql-replication%EC%9D%84-%EC%9D%B4%EC%9A%A9%ED%95%9C-%EB%8B%A4%EC%A4%91%ED%99%94-%EA%B5%AC%EC%84%B1/) 참조, 설정 방법은 [링크](https://www.postgresql.org/docs/15/auth-pg-hba-conf.html)를 참조 해주시기 바랍니다…
 - `user` 는 postgreSQL 의 role name 이다.
     - `all` 은 모든 유저를 뜻한다.
-    - `all` 이 아니면, 특정 user(role) 를 기입해야 하며 `+` 가 선행되면 “이 role 의 직접, 간접적인 멤버인 아무 role” 이라는 뜻이 된다. `,` 를 이용하여 여러명의 유저를 기입할 수 있다.
+    - `all` 이 아니면, 특정 user(role) 를 기입해야 하며 `+` 가 선행되면 “이 role 의 직접, 간접적인 멤버인 아무 role” 이라는 뜻이 된다. (user 와 role 은 [postgreSQL Role 설정](https://www.notion.so/postgreSQL-Role-399ca416b9ab47e69ffcd7a726792663)  참고) `,` 를 이용하여 여러명의 유저를 기입할 수 있다.
 - `address` 는 client 의 주소이며 값으로 host name, IP address range, 혹은 다음과 같은 special key words 가 올 수 있다.
     - `all` 은 모든 IP address 를 뜻한다.
     - `samehost` 는 서버가 가진 모든 IP address 와 매칭된다.
     - `samenet` 은 서버와 직접적으로 연결된 모든 subnet 과 매칭된다.
-- `auth-method` 는 사용할 인증 방법을 뜻한다. 자세한 설명은 [이곳](https://www.postgresql.org/docs/15/auth-methods.html)에 나와있으며, 보안 상`scram-sha-256`  을 사용하였다.
+- `auth-method` 는 사용할 인증 방법을 뜻한다.
+    - password based 인증 방법은 [Password Authentication](https://www.notion.so/Password-Authentication-3332f4362cd347ceac7b7d3a0084a032) 에 나와 있다.
+    - `trust` 는 postgres 에 누구나 연결 할 수 있으며, OS-level 의 protection 만 적용된다. 외부 접속에 trust 를 주는 것은 매우 위험하지만, `local` 에서 사용할때 간편하다.
+    - 이 외에 자세한 설명은 [이곳](https://www.postgresql.org/docs/15/auth-methods.html)에 나와있으며, 보안 상`scram-sha-256`  을 사용하였다.
 
 이 외에도 [링크](https://www.postgresql.org/docs/15/auth-pg-hba-conf.html)를 참조하여 다양한 설정을 할 수 있다.
 
@@ -91,7 +94,7 @@ PostgreSQL 은 데이터베이스의 접근 권한을 `role` 이라는 컨셉으
 
 postgreSQL 8.1 이전에는 users 와 groups 가 명백히 구분되었지만, 이제는 role 밖에 없으며 role 이 user 나 group 의 역할을 할 수 있다.
 
-이 외에도 방대한 설정이 [postgresql Role 설정](#postgresql-role-설정) 에 나와있다.
+내용이 방대하니 필요한 내용은 Reference 의 [postgresql Role 설정](https://www.notion.so/postgresql-Role-99c6d698936d4a6dbbe2891511ecd930) 에서 확인해 주시길 바랍니다…
 
 # Docker 에서 자동화
 
@@ -102,6 +105,40 @@ Docker 를 이용하여 별도의 DB 컨테이너를 띄우고, 다른 컨테이
 예를 들면, `psql --host=dev_host --port=5432 --username=dev_user --dbname=dev_db -W <type password in prompt>` 라는 명령어는 `PGHOST=dev_host; PGPORT=5432; PGUSER=dev_user; PGDATABASE=dev_db PGPASSWORD=<password>` 와 같이 환경변수가 설정되어 있다면 `psql` 하나로 끝낼 수 있다. 이 외에 다른 환경변수들은 [링크](https://www.postgresql.org/docs/current/libpq-envars.html)에 더 나와있다.
 
 `psql -c` 옵션을 사용하면, 쉘에서 쿼리를 postgreSQL 에 실행이 가능해져서, `psql -U postgres postgres -c "CREATE ROLE ${PGUSER} NOSUPERUSER NOCREATEROLE LOGIN CREATEDB PASSWORD '${PGPASSWORD}'"` 와 같은 커멘드를 스크립트에 넣어서 컨테이너 실행 시 원격 접속을 위한 유저가 생성되게 할 수 있다.
+
+# CLI 를 통한 DB 접속
+
+`psql -h <host> -U <username> -p <port> database-name`  명령어 통하여 원격 접속 할 수 있으며 패스워드 입력 프롬프트가 활설화된다.  `PGHOST, PGUSER , PGPORT, PGPASSWORD, PGDATABASE` 환경변수가 설정되어 있다면 `psql` 커멘드로 바로 접속할 수 있다.
+
+# VSCode SQLTools extension 을 통한 DB 접속
+
+1. 커맨드 팔레트 (command + shift + p) 를 눌러 Add New Connection 클릭
+
+![postgres-vsc-extension-1](/image/postgres-vsc-extension-1.png)
+
+2. PostgreSQL 을 누르면 다음과 같은 화면이 뜬다.
+
+![postgres-vsc-extension-2](/image/postgres-vsc-extension-2.png)
+
+3. 내용 기입. 
+    - Server Address 는 DB 컨테이너의 IP 를 입력해도 되지만, 컨테이너의 이름을 기입해도 된다.
+    - Database 와 Username 은 DB 컨테이너에 .env 를 통하여 넘겨준 `PGDATABASE`, `PGUSER` 의 값을 기입하면 된다.
+        - postgre 컨테이너에서 .env 에 있는 유저에게 원격 접속 권한을 주어서 가능하다.
+
+![postgres-vsc-extension-3](/image/postgres-vsc-extension-3.png)
+
+4. 스크롤을 내려 TEST CONNECTION 을 누르면 암호 기입창이 나타나며, 역시 .env 를 통하여 넘겨준 `PGPASSWORD` 의 값을 입력하면 된다.
+
+![postgres-vsc-extension-4](/image/postgres-vsc-extension-4.png)
+
+5. 성공하면 메시지가 나타나며, SAVE CONNECTION 버튼을 눌러 설정 저장
+    
+    ![postgres-vsc-extension-5](/image/postgres-vsc-extension-5.png)
+    
+    6. Connect 버튼을 누르면 원격 접속 완료
+    
+    ![postgres-vsc-extension-6](/image/postgres-vsc-extension-6.png)
+    
 
 # Reference
 
