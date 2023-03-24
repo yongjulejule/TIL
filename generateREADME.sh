@@ -28,24 +28,30 @@ EOF
 
 echo "# Index"
 
-dirs=$(file * | grep directory | tr -d ":" | cut -d ' ' -f 1)
-# dirs=($(find . -type d ! -path './.*' | xargs basename))
-# unset dirs[0]
+dirs=($(find . -type d ! -path './.*' | sed 's/^\.\///' | sort))
+
+unset dirs[0]
  
+IFS=$'\n'
+
 for d in ${dirs[@]}; do
 	if [[ $d = "image" ]]; then
 		continue
 	fi
+	filepath=$(find $d -depth 1 -type f -name "*.md" ! -name "README.md" | sort)
+  if [[ -z $filepath ]]; then
+    continue
+  fi
+  filename=($filepath)
+	filename=${filepath[@]//.md/}
+  if [[ -z $filename ]]; then
+    continue
+  fi
 	echo -e "\n## $d\n"
 	echo -e "|Title|Modified at|"
 	echo -e "|:---|:---|"
-	filepath=$(find $d -type f ! -name "README.md")
-	# filename=$(echo $filepath | xargs basename -s .md)
-	filename=($(echo $filepath))
-	filename=${filename[@]//.md/}
 
 	for f in $filename; do
-	# echo d/f : $d/$f
 		date=$(git log -1 --format=%ci -- $f.md)
 		echo "|[${f//*\/}]($f.md)| ${date/ *} |"
 	done
