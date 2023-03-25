@@ -9,9 +9,17 @@
 
 ## 힙 프로파일러
 
+- chrome devtool 의 heap profiler 를 사용하여 힙 프로파일을 캡쳐할 수 있다.
+
 ## 힙 스냅샷
 
+- chrome devtool 의 heap snapshot 을 사용하여 힙 스냅샷을 캡쳐할 수 있다.
+- 힙 스냅샷은 힙의 상태를 캡쳐한 것으로, 힙의 상태를 시간에 따라 비교할 수 있다.
+- 각 스냅샷을 비교하여 메모리 누수를 찾을 수 있다.
+
 ## GC 
+
+- `node --trace-gc` 옵션으로 GC 로그를 출력할 수 있다.
 
 # Reference
 
