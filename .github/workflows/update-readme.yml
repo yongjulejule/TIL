@@ -14,13 +14,12 @@ jobs:
           fetch-depth: 0
       - name: Update README
         id: TIL
-        uses: yongjulejule/TIL-github-action@testv1
+        uses: yongjulejule/TIL-github-action@v1
         env:
           TIL_HEADER: ${{ vars.TIL_HEADER }}
           
       - name: Commit changes
         run: |
-          git config --global --add safe.directory /github/workspace
           git config --local user.email "action@github.com"
           git config --local user.name "GitHub Action"
           git add README.md
