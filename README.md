@@ -92,6 +92,12 @@ Today I Learned
 |[about-nginx](nginx/about-nginx.md)| 2022-09-13 |
 |[nginx-config](nginx/nginx-config.md)| 2022-06-13 |
 
+## node
+
+|Title|Modified at|
+|:---|:---|
+|[node-debugging](node/node-debugging.md)| 2023-03-25 |
+
 ## openssl
 
 |Title|Modified at|
