@@ -4,6 +4,8 @@ Today I Learned
 
 새로 알게 된 내용들을 저장하는 곳입니다.
 
+
+
 # Index
 
 ## Database/postgreSQL
@@ -90,12 +92,6 @@ Today I Learned
 |[about-nginx](nginx/about-nginx.md)| 2022-09-13 |
 |[nginx-config](nginx/nginx-config.md)| 2022-06-13 |
 
-## node
-
-|Title|Modified at|
-|:---|:---|
-|[node-debugging](node/node-debugging.md)|  |
-
 ## openssl
 
 |Title|Modified at|
@@ -121,7 +117,7 @@ Today I Learned
 
 |Title|Modified at|
 |:---|:---|
-|[bash-parameter-expansion](shell/bash-parameter-expansion.md)| 2022-12-18 |
+|[bash-parameter-expansion](shell/bash-parameter-expansion.md)| 2023-03-24 |
 |[env-command](shell/env-command.md)| 2022-05-12 |
 |[envsubst-command](shell/envsubst-command.md)| 2022-05-26 |
 |[if-else-statement](shell/if-else-statement.md)| 2022-04-28 |
