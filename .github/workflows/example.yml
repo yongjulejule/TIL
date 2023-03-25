@@ -1,0 +1,43 @@
+name: "update readme"
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  update-readme:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with: 
+          fetch-depth: 0
+      - name: Update README
+        id: TIL
+        uses: yongjulejule/TIL-github-action@testv1
+        env:
+          TIL_HEADER: ${{ vars.TIL_HEADER }}
+          
+      - name: Commit changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add README.md
+          git commit -m "Update README.md"
+      - name: Create Pull Request
+        id: cpr
+        uses: peter-evans/create-pull-request@v4
+        with:
+          token: ${{ secrets.PAT }}
+          commit-message: Update report
+          committer: GitHub <noreply@github.com>
+          author: GitHub Action <action@github.com>
+          signoff: false
+          branch: readme-bot
+          delete-branch: true
+          title: '[bot] Update README.md'
+          body: |
+            Update README.md. Please review the changes.
+          assignees: ${{ github.actor }}
+          reviewers: ${{ github.actor }}
+          draft: false
