@@ -14,6 +14,15 @@ Today I Learned
 |:---|:---|
 |[PostgreSQL-원격-접속-환경-구축](Database/postgreSQL/PostgreSQL-원격-접속-환경-구축.md)| 2023-03-24 |
 
+## Database/redis
+
+|Title|Modified at|
+|:---|:---|
+|[about-redis](Database/redis/about-redis.md)| 2023-03-27 |
+|[redis-basic-usage](Database/redis/redis-basic-usage.md)| 2023-03-27 |
+|[redis-cache-for-wordpress](Database/redis/redis-cache-for-wordpress.md)| 2023-03-27 |
+|[redis-datastructure](Database/redis/redis-datastructure.md)| 2023-03-27 |
+
 ## Operating-System
 
 |Title|Modified at|
@@ -110,14 +119,6 @@ Today I Learned
 |:---|:---|
 |[SSL-TLS](protocol/SSL-TLS.md)| 2022-06-10 |
 |[ftp](protocol/ftp.md)| 2022-06-14 |
-
-## redis
-
-|Title|Modified at|
-|:---|:---|
-|[about-redis](redis/about-redis.md)| 2022-05-30 |
-|[redis-cache-for-wordpress](redis/redis-cache-for-wordpress.md)| 2022-05-26 |
-|[redis-datastructure](redis/redis-datastructure.md)| 2022-05-30 |
 
 ## shell
 
