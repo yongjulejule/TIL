@@ -1,0 +1,6 @@
+ReDoS
+DDoS
+XSS
+CSRF
+DNS rebinding
+MITM
