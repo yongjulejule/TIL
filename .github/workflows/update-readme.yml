@@ -9,17 +9,18 @@ on:
 
 jobs:
   update-readme:
+    if: "!contains(github.event.head_commit.message, '[test]')"
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-        with: 
+        with:
           fetch-depth: 0
       - name: Update README
         id: TIL
         uses: yongjulejule/TIL-github-action@v1
         env:
           TIL_HEADER: ${{ vars.TIL_HEADER }}
-          
+
       - name: Commit changes
         run: |
           git config --local user.email "action@github.com"
@@ -37,7 +38,7 @@ jobs:
           signoff: false
           branch: readme-bot
           delete-branch: true
-          title: '[bot] Update README.md'
+          title: "[bot] Update README.md"
           body: |
             Update README.md. Please review the changes.
           assignees: ${{ github.actor }}
